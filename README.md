@@ -5,10 +5,15 @@ Projet mobile java android
 
 
 Fonctionnalités:
+
 Random cocktail
+
 profilage (catégorisation des préférences de l’user)
+
 Listage et suggestion de boisson en fonction du profil
+
 Liste d'ingrédients renvoie une liste de cocktails possible ou presque
+
 Evaluation et comparaison de l’utilisateur (tier list)
 
 
