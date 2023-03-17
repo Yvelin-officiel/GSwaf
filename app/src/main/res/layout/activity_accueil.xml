@@ -8,42 +8,89 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="G Swaf"
-        android:gravity="center"/>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="cursive"
+            android:paddingTop="20dp"
+            android:text="G Swaf"
+            android:textSize="32dp"
+            android:textStyle="bold"
+
+            />
+
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        >
-        <Button
+        android:layout_marginTop="1in">
+
+
+        <!--  FENETRE PRINCIPALE (IMAGE)  -->
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/b1"
-            android:text=""/>
+            android:layout_centerHorizontal="true">
 
-        <Button
+        </RelativeLayout>
+
+
+        <!--  BOUTTONS GAUCHE  -->
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/b2"
-            android:text=""/>
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@color/material_dynamic_neutral40"
+            android:padding="2dp">
 
-        <Button
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+
+        <!--  BOUTTONS DROITE  -->
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/b3"
-            android:text=""/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@color/material_dynamic_neutral40"
+            android:padding="2dp">
 
+            <ImageButton
+                android:id="@+id/addToLike"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@drawable/like"
+                android:text="like"
+
+
+                />
+
+            <Button
+                android:id="@+id/addToLater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addToLike"
+                android:text="later" />
+
+            <Button
+                android:id="@+id/addToList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addToLater"
+                android:text="list" />
+
+        </RelativeLayout>
     </RelativeLayout>
-
 
 </RelativeLayout>
