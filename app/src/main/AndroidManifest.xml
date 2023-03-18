@@ -12,6 +12,18 @@
         android:theme="@style/Theme.GSwaf"
         tools:targetApi="31">
         <activity
+            android:name=".LikesActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".LaterActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ListActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
