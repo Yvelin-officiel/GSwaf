@@ -32,18 +32,21 @@
 
 
         <!--  FENETRE PRINCIPALE (IMAGE)  -->
-        <RelativeLayout
-            android:id="@+id/imageLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
+        <LinearLayout
+            android:id="@+id/layoutCocktail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo" />
+                android:id="@+id/image"
+                android:layout_marginBottom="50dp"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
 
         <!--  BOUTTONS GAUCHE  -->
@@ -92,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/addToLike"
-                android:background="@color/material_on_background_disabled"
+                android:background="@color/material_dynamic_neutral40"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="clic"
@@ -121,23 +124,10 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="likes"
-                android:id="@+id/likes"
+                android:text="refresh"
+                android:id="@+id/refresh"
                 android:onClick="clic"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="later"
-                android:id="@+id/later"
-                android:onClick="clic"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="list"
-                android:id="@+id/list"
-                android:onClick="clic"/>
 
         </LinearLayout>
     </RelativeLayout>
