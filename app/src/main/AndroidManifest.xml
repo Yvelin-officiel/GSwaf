@@ -17,6 +17,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".RandomCocktailActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".LaterActivity"
             android:exported="true">
         </activity>
