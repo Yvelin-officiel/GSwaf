@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">GSwaf</string>
     <string name="Title">G Swaf</string>
+    <string name="image">image</string>
+    <string name="addtodislike">addToDisLike</string>
+    <string name="addtolike">addToLike</string>
+    <string name="addtolater">addToLater</string>
+    <string name="addtolist">addToList</string>
 </resources>

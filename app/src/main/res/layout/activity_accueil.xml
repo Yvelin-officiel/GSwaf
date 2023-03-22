@@ -7,7 +7,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <TextView
             android:id="@+id/textView"
@@ -25,111 +26,40 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        >
 
-
-        <!--  FENETRE PRINCIPALE (IMAGE)  -->
-        <LinearLayout
-            android:id="@+id/layoutCocktail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/image"
-                android:layout_marginBottom="50dp"/>
-
-        </LinearLayout>
-
-
-        <!--  BOUTTONS GAUCHE  -->
-        <RelativeLayout
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@color/material_dynamic_neutral80"
-
-            >
-
-            <ImageButton
-                android:id="@+id/addToDislike"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/material_on_background_disabled"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="clic"
-                android:src="@drawable/baseline_thumb_down_24" />
-
-        </RelativeLayout>
-
-
-        <!--  BOUTTONS DROITE  -->
-        <RelativeLayout
+            android:id="@+id/RandomCocktail"
+            android:text="Random Cocktail"
+            android:onClick="clic"/>
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@color/material_dynamic_neutral80">
-
-            <ImageButton
-                android:id="@+id/addToLike"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/material_on_background_disabled"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="clic"
-                android:src="@drawable/baseline_thumb_up_24" />
-
-            <ImageButton
-                android:id="@+id/addToLater"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/addToLike"
-                android:background="@color/material_dynamic_neutral40"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="clic"
-                android:src="@drawable/baseline_watch_later_24" />
-
-            <ImageButton
-                android:id="@+id/addToList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/addToLater"
-                android:background="@color/material_on_background_disabled"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="clic"
-                android:src="@drawable/baseline_playlist_add_check_24" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/Likes"
+            android:text="Likes"
+            android:onClick="clic"/>
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            >
+            android:id="@+id/Later"
+            android:text="Later"
+            android:onClick="clic"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/List"
+            android:text="List"
+            android:onClick="clic"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="refresh"
-                android:id="@+id/refresh"
-                android:onClick="clic"/>
 
 
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
