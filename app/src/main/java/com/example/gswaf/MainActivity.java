@@ -33,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         int id =  view.getId();
         Intent i ;
-        System.out.println("SWAG "+id);
         switch (id){
             case R.id.RandomCocktail:
-                System.out.println("SWAG");
                 i = new Intent(MainActivity.this, RandomCocktailActivity.class);
                 startActivity(i);
                 break;

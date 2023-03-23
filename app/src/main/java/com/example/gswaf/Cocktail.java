@@ -1,6 +1,5 @@
 package com.example.gswaf;
 
-import java.net.URL;
 import java.util.List;
 
 public class Cocktail {
@@ -9,16 +8,21 @@ public class Cocktail {
     private String name;
     private String instruction;
     private String imageURL;
+    private boolean alcool;
+
 
     /* Les deux listes sont instanciées ensemble donc pour un id,
     * on a un ingredient dans ingredients et sa mesure dans measures
      */
-
     private List<String> ingredients;
     private List<String> measures;
 
     public Cocktail(){
 
+    }
+
+    public Cocktail(int id){
+        this.id = id;
     }
 
     public Cocktail(int id, String name, String instruction, String imageURL, List<String> ingredients, List<String> measures) {

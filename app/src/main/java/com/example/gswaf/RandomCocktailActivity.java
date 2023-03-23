@@ -1,5 +1,7 @@
 package com.example.gswaf;
 
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -9,6 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +40,10 @@ import java.util.List;
 
 public class RandomCocktailActivity extends AppCompatActivity {
 
+    DBHandler db;
 
+    // id du cocktail généré
+    int cocktailID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +51,29 @@ public class RandomCocktailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_randomcocktail);
 
 
-
-
         RequestTask rt = new RequestTask();
         rt.execute();
+
+        db = new DBHandler(this);
+    }
+
+    public void clic (View v){
+        Intent i ;
+        if (v.getId() == R.id.likelist){
+            i = new Intent(RandomCocktailActivity.this, LikesActivity.class);
+            startActivity(i);
+        }
+    }
+
+
+
+    /**
+     *
+     * @param view
+     */
+    public void addToLike(View view)  {
+
+        db.insertCocktail(cocktailID);
 
     }
 
@@ -129,7 +155,7 @@ public class RandomCocktailActivity extends AppCompatActivity {
 
                             // Verifie si une mesure correspond a l'ingredient
                             if ((Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strMeasure"+j), Html.FROM_HTML_MODE_LEGACY).toString())
-                                    .compareTo("null") == 0) ;
+                                    .compareTo("null") == 0) measure.add(" Pas d'info ");
                             else {
                                 measu = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strMeasure" + URLEncoder.encode(String.valueOf(j), "utf-8")), Html.FROM_HTML_MODE_LEGACY));
                                 measure.add(measu.toString());
@@ -139,7 +165,8 @@ public class RandomCocktailActivity extends AppCompatActivity {
                     }
 
                     response = new Cocktail(Integer.parseInt(id.toString()), name.toString(), instruction.toString(), urlDecoder, ingredients, measure);
-
+                    cocktailID =  Integer.parseInt(id.toString());
+                    System.out.println("COCKTAIL ID : "+cocktailID);
                 }
             } catch (Exception e) {
                 Log.e("ERROR","\n Code erreur retourné par le serveur :  "  + "\n\n \t Message : " + jso.getString("message"));
@@ -180,9 +207,12 @@ public class RandomCocktailActivity extends AppCompatActivity {
             t.setText(
                     cocktail.getRecipe()
             );
-
         }
+    }
 
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 
 }
