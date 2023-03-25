@@ -6,4 +6,7 @@
     <string name="addtolike">addToLike</string>
     <string name="addtolater">addToLater</string>
     <string name="addtolist">addToList</string>
+    <string name="search">Search</string>
+    <string name="favorite">Favorite</string>
+    <string name="more">More</string>
 </resources>
