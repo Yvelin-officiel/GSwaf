@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     Animation scaleUp,scaleDown;
 
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
@@ -33,10 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         int id =  view.getId();
         Intent i ;
-        System.out.println("SWAG "+id);
         switch (id){
             case R.id.RandomCocktail:
-                System.out.println("SWAG");
                 i = new Intent(MainActivity.this, RandomCocktailActivity.class);
                 startActivity(i);
                 break;
@@ -52,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
                 i = new Intent(MainActivity.this, ListActivity.class);
                 startActivity(i);
                 break;
+            case R.id.Register:
+                i = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(i);
+                break;
+            case R.id.Login:
+                i = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(i);
 
         }
 
