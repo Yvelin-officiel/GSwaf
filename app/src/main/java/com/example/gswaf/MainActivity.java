@@ -19,12 +19,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
 
     // Animations clic
@@ -42,8 +43,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.topAppBar);
         setSupportActionBar(myToolbar);
 
+        NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
         drawerLayout = findViewById(R.id.main_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+
+        navigationView.setNavigationItemSelectedListener(this);
 
         // pass the Open and Close toggle for the drawer layout listener
         // to toggle the button
@@ -120,10 +124,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             switch (item.getItemId()) {
                 case R.id.favorite:
-                    Toast.makeText(this, "Item favorite selected", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.search:
-                    Toast.makeText(this, "Item serach selected", Toast.LENGTH_SHORT).show();
+
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
@@ -142,6 +143,32 @@ public class MainActivity extends AppCompatActivity {
     private void configureNavigationView(){
         this.navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) this);
+    }
+
+
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        // 4 - Handle Navigation Item Click
+        int id = item.getItemId();
+        Intent i ;
+
+        switch (id){
+            case R.id.tindercocktail:
+                i = new Intent(MainActivity.this, RandomCocktailActivity.class);
+                startActivity(i);
+                break;
+            case R.id.likes:
+                i = new Intent(MainActivity.this, LikesActivity.class);
+                startActivity(i);
+                break;
+            default:
+                break;
+        }
+
+        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 }
 

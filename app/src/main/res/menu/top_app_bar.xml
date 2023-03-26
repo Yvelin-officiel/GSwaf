@@ -10,14 +10,5 @@
         android:title="@string/favorite"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/search"
-        android:title="@string/search"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/more"
-        android:title="@string/more"
-        app:showAsAction="never" />
 
 </menu>
