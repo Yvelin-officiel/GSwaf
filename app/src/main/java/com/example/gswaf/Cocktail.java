@@ -8,7 +8,6 @@ public class Cocktail {
     private String name;
     private String instruction;
     private String imageURL;
-    private boolean alcool;
 
 
     /* Les deux listes sont instanciées ensemble donc pour un id,
@@ -61,7 +60,7 @@ public class Cocktail {
     public String getRecipe(){
         String recipe = "";
                 for (int i = 0; i <ingredients.size(); i++){
-                    recipe += this.ingredients.get(i)+"    "+this.measures.get(i);
+                    recipe += this.ingredients.get(i)+"    "+this.measures.get(i)+ "       ";
                 }
         return recipe;
     }

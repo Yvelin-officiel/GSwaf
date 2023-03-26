@@ -7,8 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/textView"
@@ -29,36 +28,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_centerInParent="true"
-        >
+        android:gravity="center"
+        android:orientation="vertical">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/RandomCocktail"
-            android:text="Random Cocktail"
-            android:onClick="clic"/>
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Random Cocktail" />
+
+        <Button
             android:id="@+id/Likes"
-            android:text="Likes"
-            android:onClick="clic"/>
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Likes" />
+
+        <Button
             android:id="@+id/Later"
-            android:text="Later"
-            android:onClick="clic"/>
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Later" />
+
+        <Button
             android:id="@+id/List"
-            android:text="List"
-            android:onClick="clic"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="List" />
 
-
+        <Button
+            android:id="@+id/Register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="register"
+            android:layout_marginTop="50dp"/>
+        <Button
+            android:id="@+id/Login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Login"
+            android:layout_marginTop="50dp"/>
 
     </LinearLayout>
 

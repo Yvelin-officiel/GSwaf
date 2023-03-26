@@ -1,6 +1,8 @@
 package com.example.gswaf;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +43,8 @@ import java.util.List;
 public class RandomCocktailActivity extends AppCompatActivity {
 
     DBHandler db;
+    SharedPreferences sp;
+    int userID;
 
     // id du cocktail généré
     int cocktailID;
@@ -50,38 +54,38 @@ public class RandomCocktailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_randomcocktail);
 
-
         RequestTask rt = new RequestTask();
         rt.execute();
+
+        sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        userID = sp.getInt("username", -1);
 
         db = new DBHandler(this);
     }
 
-    public void clic (View v){
-        Intent i ;
-        if (v.getId() == R.id.likelist){
+    public void clic(View v) {
+        Intent i;
+        if (v.getId() == R.id.likelist) {
             i = new Intent(RandomCocktailActivity.this, LikesActivity.class);
             startActivity(i);
         }
     }
 
-
-
     /**
+     * Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
      *
-     * @param view
+     * @param view Boutton "j'aime"
      */
-    public void addToLike(View view)  {
-
-        db.insertCocktail(cocktailID);
-
+    public void addToLike(View view) {
+        db.insertLike(cocktailID, userID);
     }
 
 
-    private class RequestTask extends AsyncTask<Void, Void,  Cocktail> {
+    private class RequestTask extends AsyncTask<Void, Void, Cocktail> {
         /**
          * Lance la tâche asynchrone
-         * @return un array list avec les questions et les réponses
+         *
+         * @return un array list avec les infos du cocktail
          */
         protected Cocktail doInBackground(Void... voids) {
             Cocktail response = new Cocktail();
@@ -119,6 +123,7 @@ public class RandomCocktailActivity extends AppCompatActivity {
         /**
          * Méthode qui décode l'objet JSON
          * Extrait les attributs du cocktail et les ajoute à l'arrayList
+         *
          * @param jso L'objet JSON
          * @return ArrayList<Cocktail>
          * @throws Exception
@@ -130,8 +135,8 @@ public class RandomCocktailActivity extends AppCompatActivity {
 
             try {
                 JSONArray jsoCocktail = jso.getJSONArray("drinks");
-                for (int i = 0; i < jsoCocktail.length(); i++){
-                    Spanned id , name , instruction , imageURL,ingreds, measu;
+                for (int i = 0; i < jsoCocktail.length(); i++) {
+                    Spanned id, name, instruction, imageURL, ingreds, measu;
                     id = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("idDrink"), Html.FROM_HTML_MODE_LEGACY));
                     name = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strDrink"), Html.FROM_HTML_MODE_LEGACY));
                     instruction = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strInstructions"), Html.FROM_HTML_MODE_LEGACY));
@@ -142,34 +147,33 @@ public class RandomCocktailActivity extends AppCompatActivity {
 
 
                     // L'API n'envoie que 15 ingredients et mesures maximum
-                    for (int j = 1 ; j <= 15; j++) {
+                    for (int j = 1; j <= 15; j++) {
 
                         //Verifie si l'ingredient n'est pas null    (pas d'ingredient, pas de mesure)
-                        if ((Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strIngredient"+j), Html.FROM_HTML_MODE_LEGACY).toString())
-                                .compareTo("null") == 0) {
+                        if ((Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strIngredient" + j), Html.FROM_HTML_MODE_LEGACY).toString())
+                                .equals("null")) {
                             break;
                         } else {
-                            ingreds = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strIngredient"+j), Html.FROM_HTML_MODE_LEGACY));
+                            ingreds = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strIngredient" + j), Html.FROM_HTML_MODE_LEGACY));
                             ingredients.add(ingreds.toString());
 
 
                             // Verifie si une mesure correspond a l'ingredient
-                            if ((Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strMeasure"+j), Html.FROM_HTML_MODE_LEGACY).toString())
-                                    .compareTo("null") == 0) measure.add(" Pas d'info ");
+                            if ((Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strMeasure" + j), Html.FROM_HTML_MODE_LEGACY).toString())
+                                    .equals("null"))
+                                measure.add(" Pas d'info ");
                             else {
                                 measu = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strMeasure" + URLEncoder.encode(String.valueOf(j), "utf-8")), Html.FROM_HTML_MODE_LEGACY));
                                 measure.add(measu.toString());
                             }
-
                         }
                     }
 
                     response = new Cocktail(Integer.parseInt(id.toString()), name.toString(), instruction.toString(), urlDecoder, ingredients, measure);
-                    cocktailID =  Integer.parseInt(id.toString());
-                    System.out.println("COCKTAIL ID : "+cocktailID);
+                    cocktailID = Integer.parseInt(id.toString());
                 }
             } catch (Exception e) {
-                Log.e("ERROR","\n Code erreur retourné par le serveur :  "  + "\n\n \t Message : " + jso.getString("message"));
+                Log.e("ERROR", "\n Code erreur retourné par le serveur :  " + "\n\n \t Message : " + jso.getString("message"));
             }
             return response;
         }
@@ -178,13 +182,14 @@ public class RandomCocktailActivity extends AppCompatActivity {
         /**
          * Méthode qui va être appelée à la fin de la requête asynchrone.
          * Génère les TextView et EditText sur la bas edes données reçues
+         *
          * @param result
          */
         protected void onPostExecute(Cocktail result) {
-            LinearLayout layout  = (LinearLayout) findViewById(R.id.layoutCocktail);
-            if (result != null){
-                generateImageViewCocktail(result.getImageURL(),layout);
-                generateTextViewRecipe(result,layout);
+            LinearLayout layout = (LinearLayout) findViewById(R.id.layoutCocktail);
+            if (result != null) {
+                generateImageViewCocktail(result.getImageURL(), layout);
+                generateTextViewRecipe(result, layout);
             } else {
                 TextView t;
                 t = new TextView(getApplicationContext());
@@ -194,15 +199,16 @@ public class RandomCocktailActivity extends AppCompatActivity {
 
         /**
          * Affiche l'image du cocktail généré
+         *
          * @param url L'url de l'image a affiché
          */
-        private void generateImageViewCocktail(String url, LinearLayout layout){
+        private void generateImageViewCocktail(String url, LinearLayout layout) {
             ImageView image = findViewById(R.id.image);
             Glide.with(getBaseContext()).load(url).into(image);
         }
 
         // genère le textView sous l'image
-        private void generateTextViewRecipe (Cocktail cocktail, LinearLayout layout){
+        private void generateTextViewRecipe(Cocktail cocktail, LinearLayout layout) {
             TextView t = findViewById(R.id.recipe);
             t.setText(
                     cocktail.getRecipe()
