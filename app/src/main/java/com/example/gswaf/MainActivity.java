@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
@@ -67,10 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id =  view.getId();
         Intent i ;
-        System.out.println("SWAG "+id);
         switch (id){
             case R.id.RandomCocktail:
-                System.out.println("SWAG");
                 i = new Intent(MainActivity.this, RandomCocktailActivity.class);
                 startActivity(i);
                 break;
@@ -86,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 i = new Intent(MainActivity.this, ListActivity.class);
                 startActivity(i);
                 break;
+            case R.id.Register:
+                i = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(i);
+                break;
+            case R.id.Login:
+                i = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(i);
 
         }
 

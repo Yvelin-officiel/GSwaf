@@ -90,5 +90,54 @@
         android:layout_gravity="start"
         app:menu="@menu/navigation_menu" />
 
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/RandomCocktail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Random Cocktail" />
+
+        <Button
+            android:id="@+id/Likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Likes" />
+
+        <Button
+            android:id="@+id/Later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Later" />
+
+        <Button
+            android:id="@+id/List"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="List" />
+
+        <Button
+            android:id="@+id/Register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="register"
+            android:layout_marginTop="50dp"/>
+        <Button
+            android:id="@+id/Login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clic"
+            android:text="Login"
+            android:layout_marginTop="50dp"/>
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
