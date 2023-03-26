@@ -1,14 +1,17 @@
 package com.example.gswaf;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -19,9 +22,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +48,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RandomCocktailActivity extends AppCompatActivity {
+public class RandomCocktailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    public DrawerLayout drawerLayout;
+    Animation scaleUp,scaleDown;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
+    private NavigationView navigationView;
 
     DBHandler db;
     SharedPreferences sp;
@@ -49,10 +62,32 @@ public class RandomCocktailActivity extends AppCompatActivity {
     // id du cocktail généré
     int cocktailID;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_randomcocktail);
+
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.topAppBar);
+        setSupportActionBar(myToolbar);
+
+        NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
+        drawerLayout = findViewById(R.id.random_drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+        // pass the Open and Close toggle for the drawer layout listener
+        // to toggle the button
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        // to make the Navigation drawer icon always appear on the action bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
 
         RequestTask rt = new RequestTask();
         rt.execute();
@@ -219,6 +254,31 @@ public class RandomCocktailActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         db.close();
+    }
+
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        // 4 - Handle Navigation Item Click
+        int id = item.getItemId();
+        Intent i ;
+
+        switch (id){
+            case R.id.tindercocktail:
+                i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
+                startActivity(i);
+                break;
+            case R.id.likes:
+                i = new Intent(RandomCocktailActivity.this, LikesActivity.class);
+                startActivity(i);
+                break;
+            default:
+                break;
+        }
+
+        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 
 }
