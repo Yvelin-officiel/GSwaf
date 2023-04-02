@@ -6,7 +6,7 @@
     android:id="@+id/like_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".LikesActivity"
     tools:ignore="HardcodedText">
 
 
@@ -14,7 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/likesLayout">
+
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/topAppBar"

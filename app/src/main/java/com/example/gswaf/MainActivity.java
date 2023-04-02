@@ -2,27 +2,32 @@ package com.example.gswaf;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
-import androidx.annotation.NonNull;
+
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
+
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
 
+
+
+
     }
 
 
@@ -67,22 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id =  view.getId();
         Intent i ;
         switch (id){
-            case R.id.RandomCocktail:
-                i = new Intent(MainActivity.this, RandomCocktailActivity.class);
-                startActivity(i);
-                break;
-            case R.id.Likes:
-                i = new Intent(MainActivity.this, LikesActivity.class);
-                startActivity(i);
-                break;
-            case R.id.Later:
-                i = new Intent(MainActivity.this, LaterActivity.class);
-                startActivity(i);
-                break;
-            case R.id.List:
-                i = new Intent(MainActivity.this, ListActivity.class);
-                startActivity(i);
-                break;
             case R.id.Register:
                 i = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(i);
@@ -112,23 +106,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater= getMenuInflater();
-        inflater.inflate(R.menu.top_app_bar,menu);
+        System.out.println("ok");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.top_app_bar, menu);
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         else {
             switch (item.getItemId()) {
-                case R.id.favorite:
-
+                case R.id.buttontoolbar:
+                    i = new Intent(MainActivity.this, SearchActivity.class);
+                    startActivity(i);
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
@@ -163,6 +159,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.likes:
                 i = new Intent(MainActivity.this, LikesActivity.class);
+                startActivity(i);
+                break;
+            case R.id.later:
+                i = new Intent(MainActivity.this, LaterActivity.class);
+                startActivity(i);
+                break;
+            case R.id.accueil:
+                i = new Intent(MainActivity.this, MainActivity.class);
                 startActivity(i);
                 break;
             default:

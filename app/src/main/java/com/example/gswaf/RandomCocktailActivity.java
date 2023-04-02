@@ -271,6 +271,14 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                 i = new Intent(RandomCocktailActivity.this, LikesActivity.class);
                 startActivity(i);
                 break;
+            case R.id.later:
+                i = new Intent(RandomCocktailActivity.this, LaterActivity.class);
+                startActivity(i);
+                break;
+            case R.id.accueil:
+                i = new Intent(RandomCocktailActivity.this, MainActivity.class);
+                startActivity(i);
+                break;
             default:
                 break;
         }

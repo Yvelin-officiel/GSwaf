@@ -47,38 +47,30 @@
         android:orientation="vertical"
         android:gravity="center">
 
+
+
         <Button
-            android:layout_width="180dp"
+            android:id="@+id/Login"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/RandomCocktail"
-            android:text="Random Cocktail"
+            android:onClick="clic"
+            android:text="Login"
             android:layout_margin="10dp"
             android:background="@drawable/btn_shape_round"
-            android:onClick="clic"/>
-        <Button
-            android:layout_width="180dp"
+            android:layout_marginTop="50dp"/>
+
+
+        <TextView
+            android:id="@+id/Register"
+            android:text="Pas encore de compte ?"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/Likes"
-            android:text="Likes"
-            android:layout_margin="10dp"
-            android:background="@drawable/btn_shape_round"
-            android:onClick="clic"/>
-        <Button
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/Later"
-            android:text="Later"
-            android:layout_margin="10dp"
-            android:background="@drawable/btn_shape_round"
-            android:onClick="clic"/>
-        <Button
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/List"
-            android:text="List"
-            android:layout_margin="10dp"
-            android:background="@drawable/btn_shape_round"
-            android:onClick="clic"/>
+            android:layout_gravity="center_horizontal"
+            android:onClick="clic"
+            android:clickable="true"
+            android:layout_marginTop="50dp"
+            />
+
 
     </LinearLayout>
     </LinearLayout>
@@ -88,55 +80,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/navigation_menu" />
+        app:menu="@menu/navigation_menu"
+        app:headerLayout="@layout/nav_header"/>
 
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/RandomCocktail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clic"
-            android:text="Random Cocktail" />
-
-        <Button
-            android:id="@+id/Likes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clic"
-            android:text="Likes" />
-
-        <Button
-            android:id="@+id/Later"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clic"
-            android:text="Later" />
-
-        <Button
-            android:id="@+id/List"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clic"
-            android:text="List" />
-
-        <Button
-            android:id="@+id/Register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clic"
-            android:text="register"
-            android:layout_marginTop="50dp"/>
-        <Button
-            android:id="@+id/Login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clic"
-            android:text="Login"
-            android:layout_marginTop="50dp"/>
 
 
 

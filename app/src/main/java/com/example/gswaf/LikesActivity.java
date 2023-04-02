@@ -36,7 +36,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.CollationKey;
 import java.util.ArrayList;
 import java.util.List;
 import android.view.MenuItem;
@@ -58,7 +57,6 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     private NavigationView navigationView;
 
 
-public class LikesActivity extends AppCompatActivity {
     DBHandler db;
     SharedPreferences sp;
     int userID;
@@ -312,6 +310,14 @@ public class LikesActivity extends AppCompatActivity {
                 break;
             case R.id.likes:
                 i = new Intent(LikesActivity.this, LikesActivity.class);
+                startActivity(i);
+                break;
+            case R.id.later:
+                i = new Intent(LikesActivity.this, LaterActivity.class);
+                startActivity(i);
+                break;
+            case R.id.accueil:
+                i = new Intent(LikesActivity.this, MainActivity.class);
                 startActivity(i);
                 break;
             default:
