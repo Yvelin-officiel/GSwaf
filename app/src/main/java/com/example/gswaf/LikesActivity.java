@@ -233,8 +233,8 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         protected void onPostExecute(Cocktail result) {
 
             if (result != null) {
-                generateImageViewCocktail(result.getImageURL(),ll);
-                generateCocktailInfos(result);
+                //generateImageViewCocktail(result.getImageURL(),ll);
+                //generateCocktailInfos(result);
             } else {
                 TextView t;
                 t = new TextView(getApplicationContext());
@@ -248,17 +248,25 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
          * @param url L'url de l'image a affiché
          */
         private void generateImageViewCocktail(String url, LinearLayout layout) {
-            ImageView image = new ImageView(getApplicationContext());
+            ImageView image = new ImageView(LikesActivity.this);
 
+            try {
+                image.setImageResource(R.drawable.logo);
+                layout.addView(image);
+                image.getLayoutParams().height=100;
+                Glide.with(getBaseContext()).load(url).into(image);
+            } catch (NullPointerException e) {
+                System.out.println("Bug");
+                throw new RuntimeException(e);
 
-            layout.addView(image);
-            image.getLayoutParams().height=100;
-            Glide.with(getBaseContext()).load(url).into(image);
+            }
+
         }
 
         private void generateCocktailInfos(Cocktail cocktail){
             TextView t = new TextView(getApplicationContext());
             t.setText(cocktail.toString());
+            System.out.println(cocktail.toString());
             ll.addView(t);
 
         }

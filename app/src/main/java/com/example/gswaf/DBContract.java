@@ -25,8 +25,8 @@ public final class DBContract {
                 "CREATE TABLE " + TABLE_LIKE + " (" +
                         COLUMN_LIKE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         COLUMN_LIKE_COCKTAIL_ID + " INTEGER ," +
-                        COLUMN_LIKE_USER_ID + " INTEGER " +
-                        "userid integer, FOREIGN KEY ("+COLUMN_USER_ID+") REFERENCES "
+                        COLUMN_LIKE_USER_ID + " INTEGER, " +
+                        " FOREIGN KEY ("+COLUMN_LIKE_USER_ID+") REFERENCES "
                         +TABLE_USER+"("+COLUMN_USER_ID+"));";
 
 
