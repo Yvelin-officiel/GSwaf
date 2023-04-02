@@ -103,7 +103,6 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        setContentView(R.layout.test_likes);
 
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userID = sp.getInt("username", -1);

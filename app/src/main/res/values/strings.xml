@@ -16,7 +16,23 @@
     <string-array name="coktail_name">
         <item>Mojito</item>
         <item>Cuba Libre</item>
-        <item>cocktail3</item>
-        <item>cocktail4</item>
+        <item>A Day at the Beach</item>
+        <item>A Furlong Too Late</item>
+        <item>B-52</item>
+        <item>B-53</item>
+        <item>Cafe Savoy</item>
+        <item>Caipirinha</item>
+        <item>Daiquiri</item>
+        <item>Damned if you do</item>
+        <item>Egg Cream</item>
+        <item>Egg Nog #4</item>
+        <item>Fahrenheit 5000</item>
+        <item>Figgy Thyme</item>
+        <item>Gagliardo</item>
+        <item>Garibaldi Negroni</item>
+        <item>H.D.</item>
+        <item>Halloween Punch</item>
+        <item>Ice Pick</item>
+        <item>Iced Coffee</item>
     </string-array>
 </resources>
