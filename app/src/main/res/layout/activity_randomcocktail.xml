@@ -13,7 +13,8 @@ tools:ignore="HardcodedText">
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background_accueil">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/topAppBar"
@@ -23,65 +24,84 @@ tools:ignore="HardcodedText">
             app:menu="@menu/top_app_bar"
             app:navigationIcon="@drawable/ic_menu_24dp"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:background="@drawable/background_toolbar"
             />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/CocktailName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
+            android:gravity="center"
             android:layout_centerHorizontal="true"
             android:fontFamily="cursive"
-            android:paddingTop="20dp"
             android:text="@string/Title"
             android:textSize="32sp"
             android:textStyle="bold"
 
             />
 
-
+    <LinearLayout
+        android:id="@+id/layoutAll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        >
 
         <!--  FENETRE PRINCIPALE (IMAGE)  -->
         <LinearLayout
             android:id="@+id/layoutCocktail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:orientation="vertical"
+            android:gravity="center"
             >
 
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="5dp"
                 android:contentDescription="@string/image" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(oz = une unité de mesure)"
+                android:layout_marginBottom="30dp"
+                android:id="@+id/info"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/recipe"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/likelist"
-                    android:text="Mes Likes"
-                    android:onClick="clic"/>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/add"
-                    android:text="Like"
-                    android:onClick="addToLike"/>
-
-
             </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:id="@+id/unlike"
+                android:onClick="clic"
+                android:background="@drawable/btn_shape_round"
+                app:icon="@drawable/ic_menu_pouce2"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginLeft="50dp"
+                android:id="@+id/like"
+                android:onClick="clic"
+                android:background="@drawable/btn_shape_round"
+                app:icon="@drawable/ic_menu_pouce"/>
+
+         </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -90,7 +110,8 @@ tools:ignore="HardcodedText">
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/navigation_menu" />
+        app:menu="@menu/navigation_menu"
+        app:headerLayout="@layout/nav_header"/>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

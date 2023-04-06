@@ -4,35 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:ignore="HardcodedText">
 
-
-
-    <item
-        android:id="@+id/nav_account"
-        android:title="My Account" />
-
-
-    <item
-        android:id="@+id/nav_logout"
-        android:title="Logout" />
-
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/accueil"
+            android:icon="@drawable/ic_menu_home"
             android:title="Accueil" />
         <item
             android:id="@+id/likes"
+            android:icon="@drawable/ic_menu_like"
             android:title="Mes Likes" />
-        <item
-            android:id="@+id/later"
-            android:title="A essayer" />
+
         <item
             android:id="@+id/tindercocktail"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Coktail Tinder" />
+
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Paramètre" />
+            android:id="@+id/search"
+            android:icon="@drawable/ic_menu_search"
+            android:title="Recherche" />
+
+
     </group>
 
 

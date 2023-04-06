@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background_accueil">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/topAppBar"
@@ -24,6 +25,7 @@
             app:menu="@menu/top_app_bar"
             app:navigationIcon="@drawable/ic_menu_24dp"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:background="@drawable/background_toolbar"
             />
 
 
@@ -34,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:fontFamily="cursive"
             android:paddingTop="20dp"
-            android:text="@string/Title"
+            android:text="@string/Title2"
             android:textSize="32sp"
             android:textStyle="bold"
 

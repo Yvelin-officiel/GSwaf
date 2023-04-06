@@ -5,11 +5,18 @@
     tools:context=".MainActivity">
 
     <item
+        android:title="Rechercher Cocktail :"
+        android:id="@+id/textToolbar"
+        app:showAsAction="always"
+        android:color="@color/black"
+        />
+
+    <item
         android:id="@+id/buttontoolbar"
         android:icon="@drawable/ic_search_black_24dp"
         android:orderInCategory="200"
         app:showAsAction="always"
-        android:title="Setting" />
+        android:title="Recherche" />
 
 
 </menu>

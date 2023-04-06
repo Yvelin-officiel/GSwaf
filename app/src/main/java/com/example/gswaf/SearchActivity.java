@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -26,13 +27,15 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    public DrawerLayout drawerLayout;
 
     ListView listView;
-    ArrayList<String> cocktail;
+
     ArrayAdapter<String > adapter;
     Toolbar toolbar;
     List<String> cocktailList;
     String textformater;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +43,26 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         setContentView(R.layout.activity_search);
 
 
-        toolbar = (Toolbar) findViewById(R.id.topAppBar);
+        toolbar = (Toolbar) findViewById(R.id.topSearchAppBar);
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.search_top_app_bar);
 
         listView = (ListView) findViewById(R.id.listView);
-
         listView.setVisibility(View.GONE);
+
+        // pass the Open and Close toggle for the drawer layout listener
+        // to toggle the button
+        NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
+        drawerLayout = findViewById(R.id.search_drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         List<String> cocktailList = Arrays.asList(getResources().getStringArray(R.array.coktail_name));
 
-        System.out.println("test1");
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cocktailList);
         listView.setAdapter(adapter);
 
@@ -107,6 +119,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
     public boolean onNavigationItemSelected(MenuItem item) {
 
+
         // 4 - Handle Navigation Item Click
         int id = item.getItemId();
         Intent i ;
@@ -120,19 +133,19 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 i = new Intent(SearchActivity.this, LikesActivity.class);
                 startActivity(i);
                 break;
-            case R.id.later:
-                i = new Intent(SearchActivity.this, LaterActivity.class);
-                startActivity(i);
-                break;
             case R.id.accueil:
                 i = new Intent(SearchActivity.this, MainActivity.class);
+                startActivity(i);
+                break;
+            case R.id.search:
+                i = new Intent(SearchActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
             default:
                 break;
         }
 
-        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.search_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
