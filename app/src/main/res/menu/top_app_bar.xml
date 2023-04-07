@@ -5,10 +5,9 @@
     tools:context=".MainActivity">
 
     <item
-        android:title="Rechercher Cocktail :"
+        android:title="@string/textToolbar"
         android:id="@+id/textToolbar"
         app:showAsAction="always"
-        android:color="@color/black"
         />
 
     <item

@@ -107,20 +107,15 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
             startActivity(i);
         }
         else if (v.getId() == R.id.like) {
+            /**
+             * Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
+             */
+            db.insertLike(cocktailID, userID);
             System.out.println("test");
             Toast.makeText(this, "Cocktail ajouter aux likes ", Toast.LENGTH_SHORT).show();
             i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
             startActivity(i);
         }
-    }
-
-    /**
-     * Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
-     *
-     * @param view Boutton "j'aime"
-     */
-    public void addToLike(View view) {
-        db.insertLike(cocktailID, userID);
     }
 
 

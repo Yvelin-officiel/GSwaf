@@ -72,6 +72,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 String selectedItem = (String) parent.getItemAtPosition(position);
                 String text = ""+selectedItem;
                 textformater = text.replaceAll("\\s", "_");
+                textformater = textformater.replaceAll("'","%27");
                 Toast toast = Toast.makeText(SearchActivity.this, textformater, Toast.LENGTH_LONG);
                 toast.show();
                 Intent i;

@@ -27,6 +27,20 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="cursive"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Faîtes votre recherche en cliquant sur la loupe !"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
