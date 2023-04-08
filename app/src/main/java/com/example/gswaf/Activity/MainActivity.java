@@ -100,7 +100,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
+    /**
+     *
+     * @param item
+     * onOptionItemSelected permet de gérer les clis sur les différent item du menu top_app_bar
+     * (toolbar principale de l'application)
+     * l'unique item nous ammène au search activity
+     *
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
@@ -119,7 +126,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
+    /**
+     *
+     * @param item The selected item
+     *
+     * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
+     * (drawer disponible sur le coté gauche de l'appplication)
+     * Chaque item nous emmène sur une autre activity
+     *
+     */
     public boolean onNavigationItemSelected(MenuItem item) {
 
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -30,11 +31,12 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     public DrawerLayout drawerLayout;
 
     ListView listView;
+    ListView listViewP;
 
     ArrayAdapter<String > adapter;
     Toolbar toolbar;
     List<String> cocktailList;
-    String textformater;
+    String textformater, nameRecherche;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
@@ -50,6 +52,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         listView = (ListView) findViewById(R.id.listView);
         listView.setVisibility(View.GONE);
 
+
         // pass the Open and Close toggle for the drawer layout listener
         // to toggle the button
         NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
@@ -62,6 +65,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
 
         List<String> cocktailList = Arrays.asList(getResources().getStringArray(R.array.coktail_name));
+
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cocktailList);
         listView.setAdapter(adapter);
@@ -87,12 +91,11 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     @Override
     public boolean onCreateOptionsMenu(Menu search_top_app_bar) {
 
-        System.out.println("test2");
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_top_app_bar, search_top_app_bar);
         MenuItem searchViewItem = search_top_app_bar.findItem(R.id.app_bar_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        TextView recherche = (TextView) findViewById(R.id.recherche);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -100,15 +103,14 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 // using the filter method with the query as its argument
                 if (cocktailList.contains(query)) {
                     adapter.getFilter().filter(query);
-                } else {
-                    // Search query not found in List View
-                    Toast.makeText(SearchActivity.this, "Not found", Toast.LENGTH_LONG).show();
                 }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                recherche.setText(newText);
+                nameRecherche = newText;
                 listView.setVisibility(View.VISIBLE);
                 adapter.getFilter().filter(newText);
                 return false;
@@ -118,6 +120,30 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     }
 
 
+    /**
+     *
+     * @param v
+     * Redirection vers l'activity WebView pour n'importe quelle clic sur les items
+     * "onClick" : icone internet, textview recherche internet et recherche
+     */
+    public void onClick(View v) {
+        Intent i;
+        i = new Intent(SearchActivity.this, WebViewActivity.class);
+        i.putExtra("rechercheName",nameRecherche);
+        startActivity(i);
+
+    }
+
+
+    /**
+     *
+     * @param item The selected item
+     *
+     * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
+     * (drawer disponible sur le coté gauche de l'appplication)
+     * Chaque item nous emmène sur une autre activity
+     *
+     */
     public boolean onNavigationItemSelected(MenuItem item) {
 
 

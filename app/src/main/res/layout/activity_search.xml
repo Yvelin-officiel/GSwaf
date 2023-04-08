@@ -39,13 +39,77 @@
             android:text="Faîtes votre recherche en cliquant sur la loupe !"
             android:textSize="32sp"
             android:textStyle="bold"
+            android:layout_marginBottom="30dp"
             />
 
-    <ListView
-        android:id="@+id/listView"
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        />
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu_internet"
+            android:onClick="onClick"
+            android:clickable="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/recherche"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:onClick="onClick"
+            android:clickable="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/rechercheInfo"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:text="(recherche internet)"
+            android:onClick="onClick"
+            android:clickable="true"
+            />
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="1dp"
+            android:layout_height="1dp"/>
+
+
+
+    </LinearLayout>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            >
+
+        </ListView>
 
     </LinearLayout>
 
