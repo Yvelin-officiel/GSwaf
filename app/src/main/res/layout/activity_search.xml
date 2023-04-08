@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_drawer_layout"
+    android:id="@+id/search_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
@@ -16,15 +16,30 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/topAppBar"
+            android:id="@+id/topSearchAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/Title"
             app:menu="@menu/search_top_app_bar"
             app:navigationIcon="@drawable/ic_menu_24dp"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary">
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:background="@drawable/background_toolbar">
 
         </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="cursive"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Faîtes votre recherche en cliquant sur la loupe !"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            />
 
     <ListView
         android:id="@+id/listView"

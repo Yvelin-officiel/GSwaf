@@ -58,12 +58,25 @@ public class Cocktail {
     }
 
     public String getRecipe(){
+        String espace = "";
+        String newLine = System.getProperty("line.separator");
         String recipe = "";
                 for (int i = 0; i <ingredients.size(); i++){
-                    recipe += this.ingredients.get(i)+"    "+this.measures.get(i)+ "       ";
+                    espace = getEspace(this.ingredients.get(i).length());
+                    recipe += this.ingredients.get(i)+" :"+espace+this.measures.get(i)+newLine;
                 }
         return recipe;
     }
+
+    public String getEspace(int i){
+        String espace ="";
+        for (int a=i; a<35; a++){
+            espace +=" ";
+        }
+        return espace;
+    }
+
+
 
     @Override
     public String toString() {

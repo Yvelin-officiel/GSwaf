@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GSwaf</string>
-    <string name="Title">G Swaf</string>
+    <string name="Title">GSwaf</string>
+    <string name="Title2">Bienvenue sur GSwaf !</string>
     <string name="image">image</string>
     <string name="addtodislike">addToDisLike</string>
     <string name="addtolike">addToLike</string>
@@ -34,5 +35,35 @@
         <item>Halloween Punch</item>
         <item>Ice Pick</item>
         <item>Iced Coffee</item>
+        <item>Jack Rose Cocktail</item>
+        <item>Jack\'s Vanilla Coke</item>
+        <item>Kamikaze</item>
+        <item>Karsk</item>
+        <item>Lady Love Fizz</item>
+        <item>Lassi - A South Indian Drink</item>
+        <item>Mai Tai</item>
+        <item>Malibu Twister</item>
+        <item>National Aquarium</item>
+        <item>Negroni</item>
+        <item>Oatmeal Cookie</item>
+        <item>Old Fashioned</item>
+        <item>Paloma</item>
+        <item>Paradise</item>
+        <item>Quaker\'s Cocktail</item>
+        <item>Quarter Deck Cocktail</item>
+        <item>Radioactive Long Island Iced Tea</item>
+        <item>Radler</item>
+        <item>Salted Toffee Martini</item>
+        <item>Salty Dog</item>
+        <item>Talos Coffee</item>
+        <item>Tennesee Mud</item>
+        <item>Valencia Cocktail</item>
+        <item>Vampiro</item>
+        <item>Waikiki Beachcomber</item>
+        <item>Whiskey Sour</item>
+        <item>Yellow Bird</item>
+        <item>Yoghurt Cooler</item>
+        <item>Zambeer</item>
+        <item>Zenmeister</item>
     </string-array>
 </resources>
