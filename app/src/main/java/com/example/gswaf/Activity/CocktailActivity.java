@@ -1,4 +1,4 @@
-package com.example.gswaf;
+package com.example.gswaf.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +21,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.gswaf.Database.DBHandler;
+import com.example.gswaf.JavaClass.Cocktail;
+import com.example.gswaf.R;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;

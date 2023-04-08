@@ -14,27 +14,27 @@
         tools:targetApi="31"
         >
         <activity
-            android:name=".LikesActivity"
+            android:name=".Activity.LikesActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".SearchActivity"
+            android:name=".Activity.SearchActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".Activity.RegisterActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activity.LoginActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".CocktailActivity"
+            android:name=".Activity.CocktailActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".RandomCocktailActivity"
+            android:name=".Activity.RandomCocktailActivity"
             android:exported="true">
         </activity>
         <activity
@@ -42,7 +42,7 @@
             android:exported="true">
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Activity.MainActivity"
             android:exported="true"
             >
             <intent-filter>

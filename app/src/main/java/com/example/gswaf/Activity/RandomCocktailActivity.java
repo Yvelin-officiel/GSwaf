@@ -1,28 +1,26 @@
-package com.example.gswaf;
-
+package com.example.gswaf.Activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +28,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.gswaf.Database.DBHandler;
+import com.example.gswaf.JavaClass.Cocktail;
+import com.example.gswaf.R;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
@@ -60,8 +61,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
     SharedPreferences sp;
     int userID;
 
-    // id du cocktail généré
-    int cocktailID;
+    Cocktail cocktail;
 
 
     @Override
@@ -107,11 +107,13 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
             startActivity(i);
         }
         else if (v.getId() == R.id.like) {
-            /**
-             * Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
-             */
-            db.insertLike(cocktailID, userID);
-            System.out.println("test");
+
+            // Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
+            int idCocktail = cocktail.getId();
+            String name = cocktail.getName();
+            String imageURL = cocktail.getImageURL();
+            db.insertLike(idCocktail, name, imageURL, userID);
+
             Toast.makeText(this, "Cocktail ajouter aux likes ", Toast.LENGTH_SHORT).show();
             i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
             startActivity(i);
@@ -167,7 +169,6 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
          * @throws Exception
          */
         private Cocktail decodeJSON(JSONObject jso) throws Exception {
-            Cocktail response = new Cocktail();
             List<String> measure = new ArrayList<>();
             List<String> ingredients = new ArrayList<>();
             System.out.println("Try decode");
@@ -209,14 +210,12 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                         }
                     }
 
-                    response = new Cocktail(Integer.parseInt(id.toString()), name.toString(), instruction.toString(), urlDecoder, ingredients, measure);
-                    cocktailID = Integer.parseInt(id.toString());
-                    System.out.println(response.toString());
+                    cocktail = new Cocktail(Integer.parseInt(id.toString()), name.toString(), instruction.toString(), urlDecoder, ingredients, measure);
                 }
             } catch (Exception e) {
                 Log.e("ERROR", "\n Code erreur retourné par le serveur :  " + "\n\n \t Message : " + jso.getString("message"));
             }
-            return response;
+            return cocktail;
         }
 
 
@@ -228,14 +227,19 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
          */
         protected void onPostExecute(Cocktail result) {
             LinearLayout layout = findViewById(R.id.layoutCocktail);
-            if (result != null) {
+            try{
                 generateImageViewCocktail(result.getImageURL(), layout);
                 generateTextViewRecipe(result, layout);
                 generateNameViewCoktail(result, layout);
-            } else {
+            }  catch (java.lang.NullPointerException e) {
                 TextView t;
                 t = new TextView(getApplicationContext());
-                t.setText("Erreur");
+                t.setText("Nous n'avons pas réussi à nous connecter");
+                t.setGravity(Gravity.CENTER);
+                t.setTextSize(30);
+                t.setTextColor(Color.parseColor("#bdbdbd"));
+                layout.addView(t);
+                Log.e("ERROR", "cocktail non trouvé");
             }
         }
 

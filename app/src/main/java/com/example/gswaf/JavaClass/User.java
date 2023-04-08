@@ -1,4 +1,4 @@
-package com.example.gswaf;
+package com.example.gswaf.JavaClass;
 
 public class User {
 

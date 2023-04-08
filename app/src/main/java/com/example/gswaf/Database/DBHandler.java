@@ -1,19 +1,21 @@
-package com.example.gswaf;
+package com.example.gswaf.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.example.gswaf.JavaClass.Cocktail;
+import com.example.gswaf.JavaClass.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
     //change version when upgraded
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "Form.db";
 
     public DBHandler(Context context) {
@@ -57,13 +59,15 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void insertLike(int id, int userId) {
+    public void insertLike(int id, String name, String imageURL, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         // insertion create a row and insert it
         ContentValues row = new ContentValues();
 
         try {
             row.put(DBContract.Form.COLUMN_LIKE_COCKTAIL_ID, id);
+            row.put(DBContract.Form.COLUMN_LIKE_COCKTAIL_NAME, name);
+            row.put(DBContract.Form.COLUMN_LIKE_COCKTAIL_IMAGE, imageURL);
             row.put(DBContract.Form.COLUMN_LIKE_USER_ID, userId);
             db.insert(DBContract.Form.TABLE_LIKE, null, row);
         } catch (android.database.sqlite.SQLiteConstraintException e) {
@@ -74,20 +78,22 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * @return La liste complète des utilisateurs
+     * @return La liste des cocktails aimés par l'utilisateur connecté
      */
-    public List<User> selectUsers() {
+    public List<Cocktail> selectLike(int userID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        List<User> responses = new ArrayList<>();
+        List<Cocktail> responses = new ArrayList<>();
 
         String[] projection = {
-                DBContract.Form.COLUMN_USER_ID,
-                DBContract.Form.COLUMN_USERNAME,
-                DBContract.Form.COLUMN_PASSWORD,
+                DBContract.Form.COLUMN_LIKE_ID,
+                DBContract.Form.COLUMN_LIKE_COCKTAIL_ID,
+                DBContract.Form.COLUMN_LIKE_COCKTAIL_NAME,
+                DBContract.Form.COLUMN_LIKE_COCKTAIL_IMAGE,
+                DBContract.Form.COLUMN_LIKE_USER_ID,
         };
 
         Cursor cursor = db.query(
-                DBContract.Form.TABLE_USER,
+                DBContract.Form.TABLE_LIKE,
                 projection,
                 null,
                 null,
@@ -96,16 +102,26 @@ public class DBHandler extends SQLiteOpenHelper {
                 null
         );
 
-        while (cursor.moveToNext()) {
-            String username = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_USERNAME));
-            String password = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_PASSWORD));
+        System.out.println("USER CONNECTER : "+ userID);
 
-            User user = new User(username, password);
-            responses.add(user);
+        // Verifie chaque cocktail de la DB
+        while (cursor.moveToNext()) {
+
+            int idUser = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_LIKE_USER_ID));
+
+            if (idUser == userID){
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_LIKE_COCKTAIL_ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_LIKE_COCKTAIL_NAME));
+                String imageURL = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_LIKE_COCKTAIL_IMAGE));
+                Cocktail cocktail = new Cocktail(id);
+                cocktail.setName(name);
+                responses.add(cocktail);
+            }
         }
         cursor.close();
         return responses;
     }
+
 
     public int selectUserIdByUsername(String username){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -194,21 +210,23 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+
+
     /**
-     * @return La liste des cocktails aimés par l'utilisateur connecté
+     * @return La liste complète des utilisateurs
      */
-    public List<Cocktail> selectLike(int userID) {
+    public List<User> selectUsers() {
         SQLiteDatabase db = this.getReadableDatabase();
-        List<Cocktail> responses = new ArrayList<>();
+        List<User> responses = new ArrayList<>();
 
         String[] projection = {
-                DBContract.Form.COLUMN_LIKE_ID,
-                DBContract.Form.COLUMN_LIKE_COCKTAIL_ID,
-                DBContract.Form.COLUMN_LIKE_USER_ID,
+                DBContract.Form.COLUMN_USER_ID,
+                DBContract.Form.COLUMN_USERNAME,
+                DBContract.Form.COLUMN_PASSWORD,
         };
 
         Cursor cursor = db.query(
-                DBContract.Form.TABLE_LIKE,
+                DBContract.Form.TABLE_USER,
                 projection,
                 null,
                 null,
@@ -217,19 +235,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 null
         );
 
-        System.out.println("USER CONNECTER : "+ userID);
         while (cursor.moveToNext()) {
+            String username = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_USERNAME));
+            String password = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_PASSWORD));
 
-            int idUser = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_LIKE_USER_ID));
-
-            if (idUser == userID){
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_LIKE_COCKTAIL_ID));
-                Cocktail cocktail = new Cocktail(id);
-                responses.add(cocktail);
-            }
+            User user = new User(username, password);
+            responses.add(user);
         }
         cursor.close();
         return responses;
     }
-
 }

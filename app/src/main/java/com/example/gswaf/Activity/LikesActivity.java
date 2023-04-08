@@ -1,53 +1,27 @@
-package com.example.gswaf;
-
+package com.example.gswaf.Activity;
 
 import android.content.Intent;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
-
-import com.bumptech.glide.Glide;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
-
+import com.example.gswaf.Database.DBHandler;
+import com.example.gswaf.JavaClass.Cocktail;
+import com.example.gswaf.R;
 import com.google.android.material.navigation.NavigationView;
-
 
 public class LikesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -62,7 +36,7 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     int userID;
     List<Cocktail> cocktails;
 
-    LinearLayout ll ;
+    LinearLayout bigLinear;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,16 +67,14 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         userID = sp.getInt("username", -1);
 
 
-        ll = (LinearLayout)findViewById(R.id.likesLayout);
+        bigLinear = findViewById(R.id.likesLayout);
         db = new DBHandler(this);
 
         List<Cocktail> cocktails = db.selectLike(userID);
 
-        int id;
         for (int i = 0; i < cocktails.size();i++){
-            id = cocktails.get(i).getId();
-            RequestTask rt = new RequestTask();
-            rt.execute(id);
+            generateCocktailInfos(cocktails.get(i));
+
         }
 
 
@@ -110,156 +82,65 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     }
 
 
-    private class RequestTask extends AsyncTask<Integer, Void, Cocktail> {
-        /**
-         * Lance la tâche asynchrone
-         *
-         * @return un array list avec les infos du cocktail
-         */
-        protected Cocktail doInBackground(Integer... nb) {
-            Cocktail response = new Cocktail();
-            try {
-                HttpURLConnection connection = null;
-                URL url = new URL("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i="+URLEncoder.encode(String.valueOf(nb[0]), "utf-8"));
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                InputStream inputStream = connection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String totalLine = "";
-                String ligne = bufferedReader.readLine();
-                while (ligne != null) {
-                    totalLine += ligne;
-                    ligne = bufferedReader.readLine();
-                }
-                JSONObject toDecode = new JSONObject(totalLine);
-                // Decode l'objet JSON et récupère le ArrayList
-                response = decodeJSON(toDecode);
-            } catch (UnsupportedEncodingException e) {
-                Log.e("ERROR", "problème d'encodage");
-            } catch (MalformedURLException e) {
-                Log.e("ERROR", "problème d'url");
-            } catch (IOException e) {
-                Log.e("ERROR", "problème d'entrée sortie");
-            } catch (Exception e) {
-                Log.e("ERROR", "autre erreur");
-            }
-            return response;
-        }
+    private void generateCocktailInfos(Cocktail cocktail){
+        LinearLayout singleLayout = new LinearLayout(getApplicationContext());
 
-        //décodage du JSON et retourne la chaîne de caractère à afficher
+        String imageURL = cocktail.getImageURL();
+        generateImageViewCocktail(imageURL, singleLayout);
 
-        /**
-         * Méthode qui décode l'objet JSON
-         * Extrait les attributs du cocktail et les ajoute à l'arrayList
-         *
-         * @param jso L'objet JSON
-         * @return ArrayList<Cocktail>
-         * @throws Exception
-         */
-        private Cocktail decodeJSON(JSONObject jso) throws Exception {
-            Cocktail response = new Cocktail();
-            List<String> measure = new ArrayList<>();
-            List<String> ingredients = new ArrayList<>();
+        String name = cocktail.getName();
+        generateNameViewCocktail(name, singleLayout);
 
-            try {
-                JSONArray jsoCocktail = jso.getJSONArray("drinks");
-                for (int i = 0; i < jsoCocktail.length(); i++) {
-                    Spanned id, name, instruction, imageURL, ingreds, measu;
-                    id = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("idDrink"), Html.FROM_HTML_MODE_LEGACY));
-                    name = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strDrink"), Html.FROM_HTML_MODE_LEGACY));
-                    instruction = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strInstructions"), Html.FROM_HTML_MODE_LEGACY));
+        generateDeleteButtonViewCocktail(singleLayout);
 
-                    // URL à décoder
-                    imageURL = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strDrinkThumb"), Html.FROM_HTML_MODE_LEGACY));
-                    String urlDecoder = URLDecoder.decode(imageURL.toString(), StandardCharsets.UTF_8.name())+"/preview";
+        bigLinear.addView(singleLayout);
 
-
-                    // L'API n'envoie que 15 ingredients et mesures maximum
-                    for (int j = 1; j <= 15; j++) {
-
-                        //Verifie si l'ingredient n'est pas null    (pas d'ingredient, pas de mesure)
-                        if ((Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strIngredient" + j), Html.FROM_HTML_MODE_LEGACY).toString())
-                                .equals("null")) {
-                            break;
-                        } else {
-                            ingreds = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strIngredient" + j), Html.FROM_HTML_MODE_LEGACY));
-                            ingredients.add(ingreds.toString());
-
-
-                            // Verifie si une mesure correspond a l'ingredient
-                            if ((Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strMeasure" + j), Html.FROM_HTML_MODE_LEGACY).toString())
-                                    .equals("null"))
-                                measure.add(" Pas d'info ");
-                            else {
-                                measu = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("strMeasure" + URLEncoder.encode(String.valueOf(j), "utf-8")), Html.FROM_HTML_MODE_LEGACY));
-                                measure.add(measu.toString());
-                            }
-                        }
-                        response = new Cocktail(Integer.parseInt(id.toString()), name.toString(), instruction.toString(), urlDecoder, ingredients, measure);
-                    }
-
-
-                }
-            } catch (Exception e) {
-                Log.e("ERROR", "\n Code erreur retourné par le serveur :  " + "\n\n \t Message : " + jso.getString("message"));
-            }
-            return response;
-        }
-
-
-        /**
-         * Méthode qui va être appelée à la fin de la requête asynchrone.
-         * Génère les TextView et EditText sur la bas edes données reçues
-         *
-         * @param result
-         */
-        protected void onPostExecute(Cocktail result) {
-
-            if (result != null) {
-                //generateImageViewCocktail(result.getImageURL(),ll);
-                //generateCocktailInfos(result);
-            } else {
-                TextView t;
-                t = new TextView(getApplicationContext());
-                t.setText("Erreur");
-            }
-        }
-
-        /**
-         * Affiche l'image du cocktail généré
-         *
-         * @param url L'url de l'image a affiché
-         */
-        private void generateImageViewCocktail(String url, LinearLayout layout) {
-            ImageView image = new ImageView(LikesActivity.this);
-
-            try {
-                image.setImageResource(R.drawable.logo);
-                layout.addView(image);
-                image.getLayoutParams().height=100;
-                Glide.with(getBaseContext()).load(url).into(image);
-            } catch (NullPointerException e) {
-                System.out.println("Bug");
-                throw new RuntimeException(e);
-
-            }
-
-        }
-
-        private void generateCocktailInfos(Cocktail cocktail){
-            TextView t = new TextView(getApplicationContext());
-            t.setText(cocktail.toString());
-            System.out.println(cocktail.toString());
-            ll.addView(t);
-
-        }
     }
+    /**
+     * Affiche l'image du cocktail généré
+     * @param url L'url de l'image a affiché
+     */
+    private void generateImageViewCocktail(String url, LinearLayout layout) {
+        ImageView image = new ImageView(LikesActivity.this);
+
+        try {
+            image.setImageResource(R.drawable.cocktailfailed);
+            layout.addView(image);
+            image.getLayoutParams().height=100;
+           // Glide.with(getBaseContext()).load(url).into(image);
+        } catch (NullPointerException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void generateNameViewCocktail(String name, LinearLayout layout){
+        TextView t = new TextView(getApplicationContext());
+        t.setText(name);
+        layout.addView(t);
+    }
+    private void generateDeleteButtonViewCocktail(LinearLayout layout){
+        Button bouton = new Button(getApplicationContext());
+        bouton.setText("supprimer");
+
+        bouton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                bigLinear.removeView(layout);
+            }
+        });
+
+        layout.addView(bouton);
+    }
+
+public View.OnClickListener deleteCocktail(){
+
+    return null;
+}
 
     protected void onDestroy() {
         super.onDestroy();
         db.close();
-
     }
 
 

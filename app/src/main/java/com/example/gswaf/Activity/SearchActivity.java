@@ -1,4 +1,4 @@
-package com.example.gswaf;
+package com.example.gswaf.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,9 +19,9 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.gswaf.R;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

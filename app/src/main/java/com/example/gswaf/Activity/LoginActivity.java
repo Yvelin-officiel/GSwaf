@@ -1,4 +1,4 @@
-package com.example.gswaf;
+package com.example.gswaf.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.gswaf.Database.DBHandler;
+import com.example.gswaf.R;
 
 public class LoginActivity extends AppCompatActivity {
 

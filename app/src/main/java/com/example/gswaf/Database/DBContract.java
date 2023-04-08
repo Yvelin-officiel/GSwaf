@@ -1,4 +1,4 @@
-package com.example.gswaf;
+package com.example.gswaf.Database;
 
 public final class DBContract {
 
@@ -19,12 +19,16 @@ public final class DBContract {
         public static final String TABLE_LIKE = "tablelike";
         public static final String COLUMN_LIKE_ID = "likeid";   //Clé primaire
         public static final String COLUMN_LIKE_COCKTAIL_ID = "likecocktailid";
+        public static final String COLUMN_LIKE_COCKTAIL_NAME = "likecocktailname";
+        public static final String COLUMN_LIKE_COCKTAIL_IMAGE = "likecocktailimage";
         public static final String COLUMN_LIKE_USER_ID = "likeuserid";  //Clé étrangère
 
         public static final String SQL_CREATE_TABLE_LIKE =
                 "CREATE TABLE " + TABLE_LIKE + " (" +
                         COLUMN_LIKE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         COLUMN_LIKE_COCKTAIL_ID + " INTEGER ," +
+                        COLUMN_LIKE_COCKTAIL_NAME + " TEXT ," +
+                        COLUMN_LIKE_COCKTAIL_IMAGE + " TEXT ," +
                         COLUMN_LIKE_USER_ID + " INTEGER, " +
                         " FOREIGN KEY ("+COLUMN_LIKE_USER_ID+") REFERENCES "
                         +TABLE_USER+"("+COLUMN_USER_ID+"));";

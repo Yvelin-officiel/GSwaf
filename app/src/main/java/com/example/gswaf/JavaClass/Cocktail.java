@@ -1,4 +1,4 @@
-package com.example.gswaf;
+package com.example.gswaf.JavaClass;
 
 import java.util.List;
 
@@ -63,6 +63,10 @@ public class Cocktail {
             recipe += this.ingredients.get(i)+" / ";
         }
         return recipe;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
