@@ -11,7 +11,7 @@ public class Cocktail {
 
 
     /* Les deux listes sont instanciées ensemble donc pour un id,
-    * on a un ingredient dans ingredients et sa mesure dans measures
+     * on a un ingredient dans ingredients et sa mesure dans measures
      */
     private List<String> ingredients;
     private List<String> measures;
@@ -58,25 +58,12 @@ public class Cocktail {
     }
 
     public String getRecipe(){
-        String espace = "";
-        String newLine = System.getProperty("line.separator");
         String recipe = "";
-                for (int i = 0; i <ingredients.size(); i++){
-                    espace = getEspace(this.ingredients.get(i).length());
-                    recipe += this.ingredients.get(i)+" :"+espace+this.measures.get(i)+newLine;
-                }
+        for (int i = 0; i < this.ingredients.size(); i++){
+            recipe += this.ingredients.get(i)+" / ";
+        }
         return recipe;
     }
-
-    public String getEspace(int i){
-        String espace ="";
-        for (int a=i; a<35; a++){
-            espace +=" ";
-        }
-        return espace;
-    }
-
-
 
     @Override
     public String toString() {

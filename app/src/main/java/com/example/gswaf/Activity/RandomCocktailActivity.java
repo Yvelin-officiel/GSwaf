@@ -90,14 +90,14 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
 
-        RequestTask rt = new RequestTask();
-        rt.execute();
+
 
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userID = sp.getInt("username", -1);
 
         db = new DBHandler(this);
-
+        RequestTask rt = new RequestTask();
+        rt.execute();
     }
 
     public void clic(View v) {
@@ -170,8 +170,10 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
             Cocktail response = new Cocktail();
             List<String> measure = new ArrayList<>();
             List<String> ingredients = new ArrayList<>();
+            System.out.println("Try decode");
 
             try {
+                System.out.println("Try decode 2");
                 JSONArray jsoCocktail = jso.getJSONArray("drinks");
                 for (int i = 0; i < jsoCocktail.length(); i++) {
                     Spanned id, name, instruction, imageURL, ingreds, measu;
@@ -209,6 +211,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
 
                     response = new Cocktail(Integer.parseInt(id.toString()), name.toString(), instruction.toString(), urlDecoder, ingredients, measure);
                     cocktailID = Integer.parseInt(id.toString());
+                    System.out.println(response.toString());
                 }
             } catch (Exception e) {
                 Log.e("ERROR", "\n Code erreur retourné par le serveur :  " + "\n\n \t Message : " + jso.getString("message"));
@@ -224,7 +227,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
          * @param result
          */
         protected void onPostExecute(Cocktail result) {
-            LinearLayout layout = (LinearLayout) findViewById(R.id.layoutCocktail);
+            LinearLayout layout = findViewById(R.id.layoutCocktail);
             if (result != null) {
                 generateImageViewCocktail(result.getImageURL(), layout);
                 generateTextViewRecipe(result, layout);
@@ -249,9 +252,8 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         // genère le textView sous l'image
         private void generateTextViewRecipe(Cocktail cocktail, LinearLayout layout) {
             TextView t = findViewById(R.id.recipe);
-            t.setText(
-                    cocktail.getRecipe()
-            );
+
+            t.setText(cocktail.getRecipe());
         }
 
         private void generateNameViewCoktail(Cocktail cocktail, LinearLayout layout){
