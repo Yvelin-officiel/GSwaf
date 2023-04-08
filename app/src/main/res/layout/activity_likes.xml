@@ -23,14 +23,11 @@
             app:title="@string/Title"
             app:menu="@menu/top_app_bar"
             app:navigationIcon="@drawable/ic_menu_24dp"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary">
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:background="@drawable/background_toolbar">
 
         </androidx.appcompat.widget.Toolbar>
 
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView"></ListView>
 
     </LinearLayout>
 

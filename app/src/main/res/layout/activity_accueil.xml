@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background_accueil">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/topAppBar"
@@ -24,6 +25,7 @@
             app:menu="@menu/top_app_bar"
             app:navigationIcon="@drawable/ic_menu_24dp"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:background="@drawable/background_toolbar"
             />
 
 
@@ -34,45 +36,52 @@
             android:layout_centerHorizontal="true"
             android:fontFamily="cursive"
             android:paddingTop="20dp"
-            android:text="@string/Title"
+            android:text="@string/Title2"
             android:textSize="32sp"
             android:textStyle="bold"
 
             />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+
+            <pl.droidsonroids.gif.GifImageView
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:src="@drawable/cocktailgif2"
+                />
 
 
 
-        <Button
-            android:id="@+id/Login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clic"
-            android:text="Login"
-            android:layout_margin="10dp"
-            android:background="@drawable/btn_shape_round"
-            android:layout_marginTop="50dp"/>
+            <Button
+                android:id="@+id/Login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="clic"
+                android:text="Se connecter"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_shape_round"
+                android:layout_marginTop="50dp"/>
 
 
-        <TextView
-            android:id="@+id/Register"
-            android:text="Pas encore de compte ?"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:onClick="clic"
-            android:clickable="true"
-            android:layout_marginTop="50dp"
-            />
+            <TextView
+                android:id="@+id/Register"
+                android:text="Pas encore de compte ?"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="clic"
+                android:clickable="true"
+                android:layout_marginTop="30dp"
+                />
 
 
-    </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

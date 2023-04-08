@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -96,23 +97,25 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         userID = sp.getInt("username", -1);
 
         db = new DBHandler(this);
+
     }
 
     public void clic(View v) {
         Intent i;
-        if (v.getId() == R.id.likelist) {
-            i = new Intent(RandomCocktailActivity.this, LikesActivity.class);
+        if (v.getId() == R.id.unlike) {
+            i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
             startActivity(i);
         }
-    }
-
-    /**
-     * Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
-     *
-     * @param view Boutton "j'aime"
-     */
-    public void addToLike(View view) {
-        db.insertLike(cocktailID, userID);
+        else if (v.getId() == R.id.like) {
+            /**
+             * Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
+             */
+            db.insertLike(cocktailID, userID);
+            System.out.println("test");
+            Toast.makeText(this, "Cocktail ajouter aux likes ", Toast.LENGTH_SHORT).show();
+            i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
+            startActivity(i);
+        }
     }
 
 
@@ -225,6 +228,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
             if (result != null) {
                 generateImageViewCocktail(result.getImageURL(), layout);
                 generateTextViewRecipe(result, layout);
+                generateNameViewCoktail(result, layout);
             } else {
                 TextView t;
                 t = new TextView(getApplicationContext());
@@ -249,6 +253,13 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                     cocktail.getRecipe()
             );
         }
+
+        private void generateNameViewCoktail(Cocktail cocktail, LinearLayout layout){
+            TextView t = findViewById(R.id.CocktailName);
+            t.setText(
+                    cocktail.getName()
+            );
+        }
     }
 
     protected void onDestroy() {
@@ -271,19 +282,19 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                 i = new Intent(RandomCocktailActivity.this, LikesActivity.class);
                 startActivity(i);
                 break;
-            case R.id.later:
-                i = new Intent(RandomCocktailActivity.this, LaterActivity.class);
-                startActivity(i);
-                break;
             case R.id.accueil:
                 i = new Intent(RandomCocktailActivity.this, MainActivity.class);
+                startActivity(i);
+                break;
+            case R.id.search:
+                i = new Intent(RandomCocktailActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
             default:
                 break;
         }
 
-        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.random_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;

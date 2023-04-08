@@ -38,10 +38,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
-    private NavigationView navigationView;
-
-
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        System.out.println("ok");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_app_bar, menu);
         return true;
@@ -132,21 +127,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void configureDrawerLayout(){
-        this.drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
-
-    private void configureNavigationView(){
-        this.navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
-        navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) this);
-    }
-
 
     public boolean onNavigationItemSelected(MenuItem item) {
+
 
         // 4 - Handle Navigation Item Click
         int id = item.getItemId();
@@ -161,12 +144,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 i = new Intent(MainActivity.this, LikesActivity.class);
                 startActivity(i);
                 break;
-            case R.id.later:
-                i = new Intent(MainActivity.this, LaterActivity.class);
-                startActivity(i);
-                break;
             case R.id.accueil:
                 i = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(i);
+                break;
+            case R.id.search:
+                i = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
             default:

@@ -1,17 +1,22 @@
 package com.example.gswaf;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -36,10 +41,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CocktailActivity extends AppCompatActivity {
+public class CocktailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private String cocktail;
     int cocktailID;
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
+    Animation scaleUp,scaleDown;
+
+    DBHandler db;
+    SharedPreferences sp;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +58,87 @@ public class CocktailActivity extends AppCompatActivity {
         Intent myIntent = getIntent();
         cocktail = myIntent.getStringExtra("cocktailName");
         System.out.println("nom du cocktail: " + cocktail);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.topAppBar);
+        setSupportActionBar(myToolbar);
+
+        NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
+        drawerLayout = findViewById(R.id.cocktail_drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+        // pass the Open and Close toggle for the drawer layout listener
+        // to toggle the button
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        // to make the Navigation drawer icon always appear on the action bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
+
+        CocktailActivity.RequestTaskId rtid = new RequestTaskId();
+        rtid.execute();
+
+        db = new DBHandler(this);
+    }
+
+    private class RequestTaskId extends AsyncTask<Void, Void, Cocktail> {
+        /**
+         * Lance la tâche asynchrone
+         *
+         * @return un array list avec les infos du cocktail
+         */
+        protected Cocktail doInBackground(Void... voids) {
+            Cocktail response = new Cocktail();
+            try {
+                HttpURLConnection connection = null;
+                URL url = new URL("https://www.thecocktaildb.com/api/json/v1/1/search.php?s="+cocktail);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String totalLine = "";
+                String ligne = bufferedReader.readLine();
+                while (ligne != null) {
+                    totalLine += ligne;
+                    ligne = bufferedReader.readLine();
+                }
+                JSONObject toDecode = new JSONObject(totalLine);
+                // Decode l'objet JSON et récupère le int
+                response = decodeJSON(toDecode);
+            } catch (UnsupportedEncodingException e) {
+                Log.e("ERROR", "problème d'encodage");
+            } catch (MalformedURLException e) {
+                Log.e("ERROR", "problème d'url");
+            } catch (IOException e) {
+                Log.e("ERROR", "problème d'entrée sortie");
+            } catch (Exception e) {
+                Log.e("ERROR", "autre erreur");
+            }
+            return response;
+        }
+
+        private Cocktail decodeJSON(JSONObject jso) throws Exception {
+            Cocktail response = new Cocktail();
+            try {
+                JSONArray jsoCocktail = jso.getJSONArray("drinks");
+                for (int i = 0; i < jsoCocktail.length(); i++) {
+                    Spanned id;
+                    id = (Html.fromHtml(jsoCocktail.getJSONObject(i).getString("idDrink"), Html.FROM_HTML_MODE_LEGACY));
+                    cocktailID = Integer.parseInt(id.toString());
+                }
+            } catch (Exception e) {
+                Log.e("ERROR", "\n Code erreur retourné par le serveur :  " + "\n\n \t Message : " + jso.getString("message"));
+            }
+            CocktailActivity.RequestTask rt = new CocktailActivity.RequestTask();
+            rt.execute();
+            return response;
+
+        }
     }
 
     private class RequestTask extends AsyncTask<Void, Void, Cocktail> {
@@ -59,7 +151,7 @@ public class CocktailActivity extends AppCompatActivity {
             Cocktail response = new Cocktail();
             try {
                 HttpURLConnection connection = null;
-                URL url = new URL("https://www.thecocktaildb.com/api/json/v1/1/random.php");
+                URL url = new URL("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i="+cocktailID);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 InputStream inputStream = connection.getInputStream();
@@ -158,6 +250,7 @@ public class CocktailActivity extends AppCompatActivity {
             if (result != null) {
                 generateImageViewCocktail(result.getImageURL(), layout);
                 generateTextViewRecipe(result, layout);
+                generateNameViewCoktail(result, layout);
             } else {
                 TextView t;
                 t = new TextView(getApplicationContext());
@@ -178,6 +271,13 @@ public class CocktailActivity extends AppCompatActivity {
             );
         }
 
+        private void generateNameViewCoktail(Cocktail cocktail, LinearLayout layout){
+            TextView t = findViewById(R.id.CocktailName);
+            t.setText(
+                    cocktail.getName()
+            );
+        }
+    }
         public boolean onNavigationItemSelected(MenuItem item) {
 
             // 4 - Handle Navigation Item Click
@@ -193,23 +293,23 @@ public class CocktailActivity extends AppCompatActivity {
                     i = new Intent(CocktailActivity.this, LikesActivity.class);
                     startActivity(i);
                     break;
-                case R.id.later:
-                    i = new Intent(CocktailActivity.this, LaterActivity.class);
-                    startActivity(i);
-                    break;
                 case R.id.accueil:
                     i = new Intent(CocktailActivity.this, MainActivity.class);
+                    startActivity(i);
+                    break;
+                case R.id.search:
+                    i = new Intent(CocktailActivity.this, SearchActivity.class);
                     startActivity(i);
                     break;
                 default:
                     break;
             }
 
-            DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
+            DrawerLayout drawer = findViewById(R.id.cocktail_drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
 
             return true;
         }
 
-    }
+
 }

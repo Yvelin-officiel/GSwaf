@@ -54,7 +54,7 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     public DrawerLayout drawerLayout;
     Animation scaleUp,scaleDown;
     public ActionBarDrawerToggle actionBarDrawerToggle;
-    private NavigationView navigationView;
+
 
 
     DBHandler db;
@@ -88,21 +88,6 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
 
         scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
-
-        List<Cocktail> image_details = getListData();
-        final ListView listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(new CustomListAdapter(this,image_details));
-
-        // When the user clicks on the ListItem
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                Object o = listView.getItemAtPosition(position);
-                Cocktail Cocktail = (Cocktail) o;
-                Toast.makeText(LikesActivity .this, "Selected :" + " " + Cocktail, Toast.LENGTH_LONG).show();
-            }
-        });
-
 
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userID = sp.getInt("username", -1);
@@ -277,32 +262,6 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
 
     }
 
-    // Liste des coktail dans les likes qui doit être afficher
-    private List<String> ingredients;
-    private List<String> measures;
-    private  List<Cocktail> getListData() {
-        List<Cocktail> list = new ArrayList<Cocktail>();
-        Cocktail mojito = new Cocktail(1, "mojito","","menthe", ingredients, measures);
-        Cocktail CubaLibre = new Cocktail(2, "Cuba Libre","", "", ingredients, measures);
-        Cocktail CubaLibre2 = new Cocktail(2, "Cuba Libre","", "", ingredients, measures);
-        Cocktail CubaLibre3 = new Cocktail(2, "Cuba Libre","", "", ingredients, measures);
-        Cocktail CubaLibre4 = new Cocktail(2, "Cuba Libre","", "", ingredients, measures);
-        Cocktail CubaLibre5 = new Cocktail(2, "Cuba Libre","", "", ingredients, measures);
-        Cocktail CubaLibre6 = new Cocktail(2, "Cuba Libre","", "", ingredients, measures);
-        Cocktail CubaLibre7 = new Cocktail(2, "Cuba Libre","", "", ingredients, measures);
-
-        list.add(mojito);
-        list.add(CubaLibre);
-        list.add(CubaLibre2);
-        list.add(CubaLibre3);
-        list.add(CubaLibre4);
-        list.add(CubaLibre5);
-        list.add(CubaLibre6);
-        list.add(CubaLibre7);
-
-
-        return list;
-    }
 
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -319,19 +278,19 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
                 i = new Intent(LikesActivity.this, LikesActivity.class);
                 startActivity(i);
                 break;
-            case R.id.later:
-                i = new Intent(LikesActivity.this, LaterActivity.class);
-                startActivity(i);
-                break;
             case R.id.accueil:
                 i = new Intent(LikesActivity.this, MainActivity.class);
+                startActivity(i);
+                break;
+            case R.id.search:
+                i = new Intent(LikesActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
             default:
                 break;
         }
 
-        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.like_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
