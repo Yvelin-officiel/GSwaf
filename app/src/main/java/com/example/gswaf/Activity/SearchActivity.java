@@ -139,7 +139,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
      * @param item
      * onOptionItemSelected permet de gérer les clis sur les différent item du menu top_app_bar
      * (toolbar principale de l'application)
-     * l'unique item nous ammène au search activity
+     * l'unique item nous amène au search activity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

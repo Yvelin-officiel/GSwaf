@@ -42,7 +42,6 @@ import java.util.Objects;
 public class LikesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     public DrawerLayout drawerLayout;
-    Animation scaleUp,scaleDown;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
 
@@ -55,7 +54,7 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_likes);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.topAppBar);
+        Toolbar myToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(myToolbar);
 
         NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
@@ -75,9 +74,6 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         }catch (NullPointerException e){
             Log.e("ERROR", "NullPointerException dans getSupportActionBar");
         }
-
-        scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-        scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
 
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userID = sp.getInt("userID", -1);
