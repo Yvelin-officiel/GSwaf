@@ -16,8 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,7 +54,7 @@ import java.util.Objects;
 public class RandomCocktailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     public DrawerLayout drawerLayout;
-    Animation scaleUp,scaleDown;
+
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
     DBHandler db;
@@ -71,7 +69,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         setContentView(R.layout.activity_randomcocktail);
 
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.topAppBar);
+        Toolbar myToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(myToolbar);
 
         NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
@@ -87,10 +85,6 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
 
         // to make the Navigation drawer icon always appear on the action bar
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
-        scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-        scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
-
 
 
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);

@@ -82,9 +82,6 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
         // to make the Navigation drawer icon always appear on the action bar
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-        scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
-
         CocktailActivity.RequestTaskId rtid = new RequestTaskId();
         rtid.execute();
 
