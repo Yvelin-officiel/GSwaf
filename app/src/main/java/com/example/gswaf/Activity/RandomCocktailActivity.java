@@ -119,10 +119,6 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                     db.insertLike(idCocktail, name, imageURL, userID);
 
                     nbCocktailLike++;
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putInt("nbCocktailLike", nbCocktailLike);
-                    editor.apply();
-
                     System.out.println(nbCocktailLike);
                     if (nbCocktailLike >= 4) {
                         nbCocktailLike = 0;
@@ -133,6 +129,9 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                     } else
                         Toast.makeText(this, "Cocktail ajouté aux likes ", Toast.LENGTH_SHORT).show();
 
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt("nbCocktailLike", nbCocktailLike);
+                    editor.apply();
                     i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
                     startActivity(i);
                 }
@@ -145,7 +144,6 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
     private class RequestTask extends AsyncTask<Void, Void, Cocktail> {
         /**
          * Lance la tâche asynchrone
-         *
          * @return un array list avec les infos du cocktail
          */
         protected Cocktail doInBackground(Void... voids) {
@@ -354,10 +352,16 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
      * Déconnecte l'utilisateur
      */
     protected void logout(){
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
-        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        try {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.apply();
+            Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        }   catch (NullPointerException e){
+            Log.e("ERROR", "Utilisateur déconnecté");
+        }   catch (Exception e) {
+            Log.e("ERROR", "Erreur avec sharedPreferences");
+        }
     }
 
     protected void onDestroy() {

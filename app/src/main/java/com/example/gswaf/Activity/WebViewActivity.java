@@ -28,10 +28,10 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
     String name;
     String Url;
 
-
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     SharedPreferences sp;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
@@ -137,11 +137,20 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
         return true;
     }
 
+    /**
+     * Déconnecte l'utilisateur
+     */
     protected void logout(){
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
-        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        try {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.apply();
+            Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        }   catch (NullPointerException e){
+            Log.e("ERROR", "Utilisateur déconnecté");
+        }   catch (Exception e) {
+            Log.e("ERROR", "Erreur avec sharedPreferences");
+        }
     }
 
     protected void onDestroy() {

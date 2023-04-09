@@ -325,10 +325,16 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
      * Déconnecte l'utilisateur
      */
     protected void logout(){
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
-        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        try {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.apply();
+            Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        }   catch (NullPointerException e){
+            Log.e("ERROR", "Utilisateur déconnecté");
+        }   catch (Exception e) {
+            Log.e("ERROR", "Erreur avec sharedPreferences");
+        }
     }
 
     protected void onDestroy() {

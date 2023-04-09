@@ -3,6 +3,7 @@ package com.example.gswaf.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,9 +65,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.Login:
                 i = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(i);
+                break;
             case R.id.gif:
                 i = new Intent(MainActivity.this, RandomCocktailActivity.class);
                 startActivity(i);
+                break;
 
         }
 
@@ -154,10 +157,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Déconnecte l'utilisateur
      */
     protected void logout(){
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
-        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        try {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.apply();
+            Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        }   catch (NullPointerException e){
+            Log.e("ERROR", "Utilisateur déconnecté");
+        }   catch (Exception e) {
+            Log.e("ERROR", "Erreur avec sharedPreferences");
+        }
     }
 
     protected void onDestroy() {

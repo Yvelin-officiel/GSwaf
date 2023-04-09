@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -207,10 +208,16 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
      * Déconnecte l'utilisateur
      */
     protected void logout(){
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
-        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        try {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.apply();
+            Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        }   catch (NullPointerException e){
+            Log.e("ERROR", "Utilisateur déconnecté");
+        }   catch (Exception e) {
+            Log.e("ERROR", "Erreur avec sharedPreferences");
+        }
     }
 
     protected void onDestroy() {
