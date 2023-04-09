@@ -86,14 +86,6 @@
             android:clickable="true"
             />
 
-        <WebView
-            android:id="@+id/webview"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_width="1dp"
-            android:layout_height="1dp"/>
-
-
 
     </LinearLayout>
 

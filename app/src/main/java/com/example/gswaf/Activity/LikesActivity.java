@@ -128,6 +128,7 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     private void generateImageViewCocktail(String url, LinearLayout layout) {
         ImageView image = new ImageView(LikesActivity.this);
 
+
         try {
             layout.addView(image);
             image.getLayoutParams().height=300;
@@ -138,6 +139,7 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         } catch (NullPointerException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     /**
@@ -158,6 +160,13 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         t.setTextColor(Color.parseColor("#000000"));
 
         layout.addView(t);
+
+        t.setOnClickListener(v -> {
+            Intent i;
+            i = new Intent(LikesActivity.this, CocktailActivity.class);
+            i.putExtra("cocktailName",name);
+            startActivity(i);
+        });
     }
 
     /**
@@ -209,10 +218,13 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     }
 
     /**
+     *
      * @param item The selected item
+     *
      * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
      * (drawer disponible sur le coté gauche de l'appplication)
-     * Chaque item nous emmène sur une autre activity
+     * Chaque item nous emmène sur une autre activity ou permet la déconnexion
+     *
      */
     @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(MenuItem item) {

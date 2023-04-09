@@ -74,13 +74,15 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cocktailList);
         listView.setAdapter(adapter);
 
+        /**
+         * Lorsqu'un item est selectionné son nom est formaté pour les requetes dans l'activity
+         * CocktailActivity, puis lance créer l'activité.
+         */
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedItem = (String) parent.getItemAtPosition(position);
             String text = ""+selectedItem;
             textformater = text.replaceAll("\\s", "_");
             textformater = textformater.replaceAll("'","%27");
-            Toast toast = Toast.makeText(SearchActivity.this, textformater, Toast.LENGTH_LONG);
-            toast.show();
             Intent i;
             i = new Intent(SearchActivity.this, CocktailActivity.class);
             i.putExtra("cocktailName",textformater);
@@ -98,6 +100,13 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
         TextView recherche = (TextView) findViewById(R.id.recherche);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            /**
+             *
+             * @param query the query text that is to be submitted
+             *
+             * @return
+             */
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // If the list contains the search query than filter the adapter
@@ -108,6 +117,12 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 return false;
             }
 
+            /**
+             *
+             * @param newText the new content of the query text field.
+             *
+             * @return
+             */
             @Override
             public boolean onQueryTextChange(String newText) {
                 recherche.setText(newText);
@@ -159,10 +174,13 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     }
 
     /**
+     *
      * @param item The selected item
+     *
      * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
      * (drawer disponible sur le coté gauche de l'appplication)
-     * Chaque item nous emmène sur une autre activity
+     * Chaque item nous emmène sur une autre activity ou permet la déconnexion
+     *
      */
     @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(MenuItem item) {

@@ -310,6 +310,15 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
             return super.onOptionsItemSelected(item);
         }
     }
+    /**
+     *
+     * @param item The selected item
+     *
+     * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
+     * (drawer disponible sur le coté gauche de l'appplication)
+     * Chaque item nous emmène sur une autre activity ou permet la déconnexion
+     *
+     */
     @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(MenuItem item) {
 

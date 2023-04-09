@@ -65,9 +65,11 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
         cocktail = myIntent.getStringExtra("cocktailName");
         System.out.println("nom du cocktail: " + cocktail);
 
+        //appel de la toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.topAppBar);
         setSupportActionBar(myToolbar);
 
+        //instanciation des objets concerant le drawer
         NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
         drawerLayout = findViewById(R.id.cocktail_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
@@ -127,6 +129,12 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
             return response;
         }
 
+        /**
+         * Méthode qui décode l'objet JSON
+         * Extrait l'id du cocktail
+         * @param jso L'objet JSON
+         * @return Cocktail
+         */
         private Cocktail decodeJSON(JSONObject jso) throws Exception {
             Cocktail response = new Cocktail();
             try {
@@ -262,6 +270,10 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
             }
         }
 
+        /**
+         * @param url
+         * Génére l'image à partir de l'url
+         */
         private void generateImageViewCocktail(String url) {
             ImageView image = findViewById(R.id.image);
             Glide.with(getBaseContext()).load(url).into(image);
@@ -275,6 +287,10 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
             );
         }
 
+        /**
+         * @param cocktail
+         * Génére le nom à partir du cocktail
+         */
         private void generateNameViewCoktail(Cocktail cocktail){
             TextView t = findViewById(R.id.CocktailName);
             t.setText(
@@ -282,6 +298,16 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
             );
         }
     }
+
+    /**
+     *
+     * @param item The selected item
+     *
+     * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
+     * (drawer disponible sur le coté gauche de l'appplication)
+     * Chaque item nous emmène sur une autre activity ou permet la déconnexion
+     *
+     */
         @SuppressLint("NonConstantResourceId")
         public boolean onNavigationItemSelected(MenuItem item) {
 

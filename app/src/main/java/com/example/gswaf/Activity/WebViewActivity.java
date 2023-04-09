@@ -36,9 +36,11 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
 
-        Toolbar myToolbar = findViewById(R.id.topAppBar);
+        Toolbar myToolbar = findViewById(R.id.topAppBarWeb);
         setSupportActionBar(myToolbar);
 
+        //création du WebView avec l'url qui prend en parametre le nom du cocktail
+        // (recherche google)
         Intent myIntent = getIntent();
         name = myIntent.getStringExtra("rechercheName");
         System.out.println("Cocktail Rechercher : " + name);
@@ -71,6 +73,9 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
     }
 
+    /**
+     * Permet le retour en arrière dans le WebView
+     */
     @Override
     public void onBackPressed() {
         WebView webView = findViewById(R.id.webview);
@@ -81,6 +86,11 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
         }
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
@@ -98,6 +108,16 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
             }
         }
     }
+
+    /**
+     *
+     * @param item The selected item
+     *
+     * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
+     * (drawer disponible sur le coté gauche de l'appplication)
+     * Chaque item nous emmène sur une autre activity ou permet la déconnexion
+     *
+     */
     public boolean onNavigationItemSelected(MenuItem item) {
 
 

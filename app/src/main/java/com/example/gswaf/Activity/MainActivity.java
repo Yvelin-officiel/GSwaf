@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar myToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(myToolbar);
 
+        //instanciation des objets concerant le drawer
         NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
         drawerLayout = findViewById(R.id.main_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
-
         navigationView.setNavigationItemSelectedListener(this);
 
         // pass the Open and Close toggle for the drawer layout listener
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      *
      * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
      * (drawer disponible sur le coté gauche de l'appplication)
-     * Chaque item nous emmène sur une autre activity
+     * Chaque item nous emmène sur une autre activity ou permet la déconnexion
      *
      */
     public boolean onNavigationItemSelected(MenuItem item) {
