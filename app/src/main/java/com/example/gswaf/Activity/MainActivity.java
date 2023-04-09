@@ -160,10 +160,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i);
                 break;
             case R.id.logout:
+                logout();
                 i = new Intent(MainActivity.this, MainActivity.class);
                 startActivity(i);
-                onStop();
-                Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -176,13 +175,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Deconnecte l'utilisateur à la fermeture
+     * Déconnecte l'utilisateur
      */
-    protected void onStop() {
-        super.onStop();
+    protected void logout(){
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
+        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        logout();
     }
 }
 

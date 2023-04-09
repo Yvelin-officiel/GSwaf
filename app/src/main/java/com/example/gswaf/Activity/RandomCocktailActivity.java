@@ -269,10 +269,6 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         }
     }
 
-    protected void onDestroy() {
-        super.onDestroy();
-        db.close();
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -326,10 +322,9 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                 startActivity(i);
                 break;
             case R.id.logout:
+                logout();
                 i = new Intent(RandomCocktailActivity.this, MainActivity.class);
                 startActivity(i);
-                onStop();
-                Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -340,15 +335,20 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
 
         return true;
     }
-
     /**
-     * Deconnecte l'utilisateur à la fermeture
+     * Déconnecte l'utilisateur
      */
-    protected void onStop() {
-        super.onStop();
+    protected void logout(){
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
+        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+        logout();
     }
 
 }

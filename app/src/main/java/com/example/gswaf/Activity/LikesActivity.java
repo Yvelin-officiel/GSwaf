@@ -93,7 +93,6 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
             TextView textView = new TextView(this);
             textView.setText("Veuillez vous connecter pour accéder à vos likes !");
             textView.setTextSize(40);
-            textView.setTextColor(Color.parseColor("#000000"));
 
             bigLinear.addView(textView);
         }else
@@ -184,10 +183,7 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     }
 
 
-    protected void onDestroy() {
-        super.onDestroy();
-        db.close();
-    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -248,10 +244,9 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(i);
                 break;
             case R.id.logout:
+                logout();
                 i = new Intent(LikesActivity.this, MainActivity.class);
                 startActivity(i);
-                onStop();
-                Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -262,13 +257,19 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     }
 
     /**
-     * Deconnecte l'utilisateur à la fermeture
+     * Déconnecte l'utilisateur
      */
-    protected void onStop() {
-        super.onStop();
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
+    protected void logout(){
+            SharedPreferences.Editor editor = sp.edit();
+            editor.clear();
+            editor.apply();
+            Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+        }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+        logout();
     }
 }
 

@@ -1,11 +1,14 @@
 package com.example.gswaf.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -19,7 +22,7 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
     String name;
     String Url;
 
-
+    SharedPreferences sp;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
@@ -33,6 +36,7 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
+        sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -69,6 +73,11 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
                 i = new Intent(WebViewActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
+            case R.id.logout:
+                logout();
+                i = new Intent(WebViewActivity.this, MainActivity.class);
+                startActivity(i);
+                break;
             default:
                 break;
         }
@@ -77,5 +86,17 @@ public class WebViewActivity extends AppCompatActivity implements NavigationView
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    protected void logout(){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
+        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        logout();
     }
 }

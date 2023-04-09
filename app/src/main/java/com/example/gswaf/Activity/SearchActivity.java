@@ -189,9 +189,9 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 startActivity(i);
                 break;
             case R.id.logout:
+                logout();
                 i = new Intent(SearchActivity.this, MainActivity.class);
                 startActivity(i);
-                onStop();
                 break;
             default:
                 break;
@@ -204,13 +204,18 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     }
 
     /**
-     * Deconnecte l'utilisateur à la fermeture
+     * Déconnecte l'utilisateur
      */
-    protected void onStop() {
-        super.onStop();
+    protected void logout(){
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
+        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        logout();
     }
 }
 

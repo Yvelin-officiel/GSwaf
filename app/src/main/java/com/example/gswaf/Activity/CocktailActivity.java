@@ -310,10 +310,9 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
                     startActivity(i);
                     break;
                 case R.id.logout:
+                    logout();
                     i = new Intent(CocktailActivity.this, MainActivity.class);
                     startActivity(i);
-                    onStop();
-                    Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -325,11 +324,20 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
             return true;
         }
 
-    protected void onStop() {
-        super.onStop();
+    /**
+     * Déconnecte l'utilisateur
+     */
+    protected void logout(){
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
+        Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+        logout();
     }
 
 }
