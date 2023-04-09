@@ -1,12 +1,14 @@
 package com.example.gswaf.Activity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,13 +33,13 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     public DrawerLayout drawerLayout;
 
     ListView listView;
-    ListView listViewP;
 
     ArrayAdapter<String > adapter;
     Toolbar toolbar;
     List<String> cocktailList;
     String textformater, nameRecherche;
     public ActionBarDrawerToggle actionBarDrawerToggle;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,25 +68,23 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
         List<String> cocktailList = Arrays.asList(getResources().getStringArray(R.array.coktail_name));
 
+        sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cocktailList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cocktailList);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = (String) parent.getItemAtPosition(position);
-                String text = ""+selectedItem;
-                textformater = text.replaceAll("\\s", "_");
-                textformater = textformater.replaceAll("'","%27");
-                Toast toast = Toast.makeText(SearchActivity.this, textformater, Toast.LENGTH_LONG);
-                toast.show();
-                Intent i;
-                i = new Intent(SearchActivity.this, CocktailActivity.class);
-                i.putExtra("cocktailName",textformater);
-                startActivity(i);
-                }
-        });
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedItem = (String) parent.getItemAtPosition(position);
+            String text = ""+selectedItem;
+            textformater = text.replaceAll("\\s", "_");
+            textformater = textformater.replaceAll("'","%27");
+            Toast toast = Toast.makeText(SearchActivity.this, textformater, Toast.LENGTH_LONG);
+            toast.show();
+            Intent i;
+            i = new Intent(SearchActivity.this, CocktailActivity.class);
+            i.putExtra("cocktailName",textformater);
+            startActivity(i);
+            });
 
     }
 
@@ -136,14 +136,34 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
 
     /**
-     *
+     * @param item
+     * onOptionItemSelected permet de gérer les clis sur les différent item du menu top_app_bar
+     * (toolbar principale de l'application)
+     * l'unique item nous ammène au search activity
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        else {
+            if (item.getItemId() == R.id.buttontoolbar) {
+                i = new Intent(SearchActivity.this, SearchActivity.class);
+                startActivity(i);
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
      * @param item The selected item
-     *
      * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
      * (drawer disponible sur le coté gauche de l'appplication)
      * Chaque item nous emmène sur une autre activity
-     *
      */
+    @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(MenuItem item) {
 
 
@@ -168,6 +188,11 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 i = new Intent(SearchActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
+            case R.id.logout:
+                i = new Intent(SearchActivity.this, MainActivity.class);
+                startActivity(i);
+                onStop();
+                break;
             default:
                 break;
         }
@@ -176,6 +201,16 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    /**
+     * Deconnecte l'utilisateur à la fermeture
+     */
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
     }
 }
 

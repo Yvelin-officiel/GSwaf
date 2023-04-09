@@ -1,5 +1,9 @@
 package com.example.gswaf.Database;
 
+import static com.example.gswaf.Database.DBContract.Form.COLUMN_LIKE_COCKTAIL_ID;
+import static com.example.gswaf.Database.DBContract.Form.COLUMN_LIKE_USER_ID;
+import static com.example.gswaf.Database.DBContract.Form.TABLE_LIKE;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -22,6 +26,10 @@ public class DBHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Execute les requêtes de créations des tables
+     * @param db La base dans laquelle ajouter
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -33,32 +41,56 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Supprime les tables dans la db si elles existent déjà, puis les recréer
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         String query1 = "DROP TABLE IF EXISTS " + DBContract.Form.TABLE_USER;
         db.execSQL(query1);
 
-        String query2 = "DROP TABLE IF EXISTS " + DBContract.Form.TABLE_LIKE;
+        String query2 = "DROP TABLE IF EXISTS " + TABLE_LIKE;
         db.execSQL(query2);
 
         onCreate(db);
     }
 
+    /**
+     * Créer un compte utilisateur dans la DB
+     * @param username  Le nom du compte
+     * @param password  Le mot de passe associé
+     * @return  True si l'ajout s'est bien déroulé, false sinon
+     */
     public boolean insertUser(String username, String password) {
+        long result = -1;
+        try{
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues row = new ContentValues();
 
         row.put(DBContract.Form.COLUMN_USERNAME, username);
         row.put(DBContract.Form.COLUMN_PASSWORD, password);
+        result = db.insert(DBContract.Form.TABLE_USER, null, row);
 
-        long result = db.insert(DBContract.Form.TABLE_USER, null, row);
+        }catch (Exception e) {
+            Log.e("ERROR", "Erreur d'insertion");
+        }
 
-        if (result == 1) return false;
+        if (result == -1) return false;
         else return true;
 
     }
 
+    /**
+     * Ajoute les infos du cocktail dans la colonne qui correspond
+     * @param id    L'id du cocktail
+     * @param name  Le nom du cocktail
+     * @param imageURL  L'url de l'image
+     * @param userId    L'id de l'utilisateur connecté
+     */
     public void insertLike(int id, String name, String imageURL, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         // insertion create a row and insert it
@@ -69,12 +101,34 @@ public class DBHandler extends SQLiteOpenHelper {
             row.put(DBContract.Form.COLUMN_LIKE_COCKTAIL_NAME, name);
             row.put(DBContract.Form.COLUMN_LIKE_COCKTAIL_IMAGE, imageURL);
             row.put(DBContract.Form.COLUMN_LIKE_USER_ID, userId);
-            db.insert(DBContract.Form.TABLE_LIKE, null, row);
+            db.insert(TABLE_LIKE, null, row);
         } catch (android.database.sqlite.SQLiteConstraintException e) {
             Log.e("ERROR", "Déjà présent dans la DB");
         } catch (Exception e) {
             Log.e("ERROR", "Autre erreur");
         }
+    }
+
+    /**
+     * Supprime la ligne d'un cocktail
+     * @param cocktailId    L'id du cocktail à supprimer
+     * @param userId    L'id de l'utilisateur qui souhaite supprimer
+     * @return  True si aucun problème, False sinon
+     */
+    public boolean deleteLike(int cocktailId, int userId) {
+        boolean success = false;
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            db.execSQL("DELETE FROM "+ TABLE_LIKE + "" +
+                    " WHERE " + COLUMN_LIKE_COCKTAIL_ID + " = "+cocktailId+"" +
+                    " AND " + COLUMN_LIKE_USER_ID + " = " + userId + "");
+            db.close();
+            success = true;
+        } catch (Exception e) {
+            Log.e("ERROR", "Erreur Delete in Database");
+        }
+        return success;
     }
 
     /**
@@ -93,7 +147,7 @@ public class DBHandler extends SQLiteOpenHelper {
         };
 
         Cursor cursor = db.query(
-                DBContract.Form.TABLE_LIKE,
+                TABLE_LIKE,
                 projection,
                 null,
                 null,
@@ -101,8 +155,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 null,
                 null
         );
-
-        System.out.println("USER CONNECTER : "+ userID);
 
         // Verifie chaque cocktail de la DB
         while (cursor.moveToNext()) {
@@ -115,6 +167,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 String imageURL = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Form.COLUMN_LIKE_COCKTAIL_IMAGE));
                 Cocktail cocktail = new Cocktail(id);
                 cocktail.setName(name);
+                cocktail.setImageURL(imageURL);
                 responses.add(cocktail);
             }
         }
@@ -154,6 +207,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return userId;
     }
 
+    /**
+     * Vérifie si le nom d'utilisateur est déjà présent dans la DB
+     * @param username Le nom à chercher
+     * @return true si il existe, false sinon
+     */
     public boolean alreadyExist(String username) {
         boolean exist = false;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -180,6 +238,12 @@ public class DBHandler extends SQLiteOpenHelper {
         return exist;
     }
 
+    /**
+     * Vérifie si le nom de compte et le mot de passe correspondent dans la DB
+     * @param username Le nom de compte
+     * @param password Le mot de passe associer
+     * @return True si c'est bon, false sinon
+     */
     public boolean checkUsernamePaswword(String username, String password) {
         boolean exist = false;
         SQLiteDatabase db = this.getReadableDatabase();

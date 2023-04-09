@@ -1,5 +1,7 @@
 package com.example.gswaf.Activity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -11,8 +13,8 @@ import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +44,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class CocktailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -51,9 +54,9 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     Animation scaleUp,scaleDown;
+    SharedPreferences sp;
 
     DBHandler db;
-    SharedPreferences sp;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +80,7 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
         actionBarDrawerToggle.syncState();
 
         // to make the Navigation drawer icon always appear on the action bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
@@ -85,9 +88,11 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
         CocktailActivity.RequestTaskId rtid = new RequestTaskId();
         rtid.execute();
 
+        sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         db = new DBHandler(this);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class RequestTaskId extends AsyncTask<Void, Void, Cocktail> {
         /**
          * Lance la tâche asynchrone
@@ -97,20 +102,20 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
         protected Cocktail doInBackground(Void... voids) {
             Cocktail response = new Cocktail();
             try {
-                HttpURLConnection connection = null;
+                HttpURLConnection connection;
                 URL url = new URL("https://www.thecocktaildb.com/api/json/v1/1/search.php?s="+cocktail);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 InputStream inputStream = connection.getInputStream();
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String totalLine = "";
+                StringBuilder totalLine = new StringBuilder();
                 String ligne = bufferedReader.readLine();
                 while (ligne != null) {
-                    totalLine += ligne;
+                    totalLine.append(ligne);
                     ligne = bufferedReader.readLine();
                 }
-                JSONObject toDecode = new JSONObject(totalLine);
+                JSONObject toDecode = new JSONObject(totalLine.toString());
                 // Decode l'objet JSON et récupère le int
                 response = decodeJSON(toDecode);
             } catch (UnsupportedEncodingException e) {
@@ -144,6 +149,7 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class RequestTask extends AsyncTask<Void, Void, Cocktail> {
         /**
          * Lance la tâche asynchrone
@@ -153,20 +159,20 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
         protected Cocktail doInBackground(Void... voids) {
             Cocktail response = new Cocktail();
             try {
-                HttpURLConnection connection = null;
+                HttpURLConnection connection;
                 URL url = new URL("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i="+cocktailID);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 InputStream inputStream = connection.getInputStream();
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String totalLine = "";
+                StringBuilder totalLine = new StringBuilder();
                 String ligne = bufferedReader.readLine();
                 while (ligne != null) {
-                    totalLine += ligne;
+                    totalLine.append(ligne);
                     ligne = bufferedReader.readLine();
                 }
-                JSONObject toDecode = new JSONObject(totalLine);
+                JSONObject toDecode = new JSONObject(totalLine.toString());
                 // Decode l'objet JSON et récupère le ArrayList
                 response = decodeJSON(toDecode);
             } catch (UnsupportedEncodingException e) {
@@ -189,7 +195,6 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
          *
          * @param jso L'objet JSON
          * @return ArrayList<Cocktail>
-         * @throws Exception
          */
         private Cocktail decodeJSON(JSONObject jso) throws Exception {
             Cocktail response = new Cocktail();
@@ -246,14 +251,13 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
          * Méthode qui va être appelée à la fin de la requête asynchrone.
          * Génère les TextView et EditText sur la bas edes données reçues
          *
-         * @param result
          */
+        @SuppressLint("SetTextI18n")
         protected void onPostExecute(Cocktail result) {
-            LinearLayout layout = (LinearLayout) findViewById(R.id.layoutCocktail);
             if (result != null) {
-                generateImageViewCocktail(result.getImageURL(), layout);
-                generateTextViewRecipe(result, layout);
-                generateNameViewCoktail(result, layout);
+                generateImageViewCocktail(result.getImageURL());
+                generateTextViewRecipe(result);
+                generateNameViewCoktail(result);
             } else {
                 TextView t;
                 t = new TextView(getApplicationContext());
@@ -261,26 +265,27 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
             }
         }
 
-        private void generateImageViewCocktail(String url, LinearLayout layout) {
+        private void generateImageViewCocktail(String url) {
             ImageView image = findViewById(R.id.image);
             Glide.with(getBaseContext()).load(url).into(image);
         }
 
         // genère le textView sous l'image
-        private void generateTextViewRecipe(Cocktail cocktail, LinearLayout layout) {
+        private void generateTextViewRecipe(Cocktail cocktail) {
             TextView t = findViewById(R.id.recipe);
             t.setText(
                     cocktail.getRecipe()
             );
         }
 
-        private void generateNameViewCoktail(Cocktail cocktail, LinearLayout layout){
+        private void generateNameViewCoktail(Cocktail cocktail){
             TextView t = findViewById(R.id.CocktailName);
             t.setText(
                     cocktail.getName()
             );
         }
     }
+        @SuppressLint("NonConstantResourceId")
         public boolean onNavigationItemSelected(MenuItem item) {
 
             // 4 - Handle Navigation Item Click
@@ -304,6 +309,12 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
                     i = new Intent(CocktailActivity.this, SearchActivity.class);
                     startActivity(i);
                     break;
+                case R.id.logout:
+                    i = new Intent(CocktailActivity.this, MainActivity.class);
+                    startActivity(i);
+                    onStop();
+                    Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+                    break;
                 default:
                     break;
             }
@@ -314,5 +325,11 @@ public class CocktailActivity extends AppCompatActivity implements NavigationVie
             return true;
         }
 
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
+    }
 
 }

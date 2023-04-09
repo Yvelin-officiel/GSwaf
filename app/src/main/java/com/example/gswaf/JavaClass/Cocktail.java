@@ -69,6 +69,10 @@ public class Cocktail {
         this.name = name;
     }
 
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     @Override
     public String toString() {
         return "Cocktail{" +

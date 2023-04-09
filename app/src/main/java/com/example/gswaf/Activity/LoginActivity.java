@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);
 
         db = new DBHandler(this);
         sp = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -52,8 +52,9 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Autenthification réussi", Toast.LENGTH_SHORT).show();
                 userID = db.selectUserIdByUsername(username);   // Renvoit l'id de l'utilisateur correspondent ou -1 si rien trouvé
                 SharedPreferences.Editor editor = sp.edit();
-                editor.putInt("username", userID);
-                editor.commit();
+                editor.putInt("userID", userID);
+                System.out.println("User login : "+ userID);
+                editor.apply();
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(i);
             } else {

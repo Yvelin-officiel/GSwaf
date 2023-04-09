@@ -1,27 +1,43 @@
 package com.example.gswaf.Activity;
 
-import android.content.Intent;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import java.util.List;
-import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+
+import com.bumptech.glide.Glide;
 import com.example.gswaf.Database.DBHandler;
 import com.example.gswaf.JavaClass.Cocktail;
 import com.example.gswaf.R;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
+import java.util.Objects;
 
 public class LikesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -30,19 +46,15 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
 
-
     DBHandler db;
     SharedPreferences sp;
     int userID;
-    List<Cocktail> cocktails;
-
     LinearLayout bigLinear;
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_likes);
-
         Toolbar myToolbar = (Toolbar) findViewById(R.id.topAppBar);
         setSupportActionBar(myToolbar);
 
@@ -58,13 +70,18 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         actionBarDrawerToggle.syncState();
 
         // to make the Navigation drawer icon always appear on the action bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        }catch (NullPointerException e){
+            Log.e("ERROR", "NullPointerException dans getSupportActionBar");
+        }
 
         scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
 
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        userID = sp.getInt("username", -1);
+        userID = sp.getInt("userID", -1);
+        System.out.println("User loged : "+ userID);
 
 
         bigLinear = findViewById(R.id.likesLayout);
@@ -72,18 +89,30 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
 
         List<Cocktail> cocktails = db.selectLike(userID);
 
-        for (int i = 0; i < cocktails.size();i++){
-            generateCocktailInfos(cocktails.get(i));
+        if (userID == -1){
+            TextView textView = new TextView(this);
+            textView.setText("Veuillez vous connecter pour accéder à vos likes !");
+            textView.setTextSize(40);
+            textView.setTextColor(Color.parseColor("#000000"));
 
-        }
-
-
-
+            bigLinear.addView(textView);
+        }else
+            for (int i = 0; i < cocktails.size();i++){
+                generateCocktailInfos(cocktails.get(i));
+            }
     }
 
-
+    /**
+     * creer un layout possedant l'image, le nom du cocktail et un bouton supprimant le cocktail des likes
+     * @param cocktail permet de recuperer les donnees
+     */
     private void generateCocktailInfos(Cocktail cocktail){
         LinearLayout singleLayout = new LinearLayout(getApplicationContext());
+        LayoutParams params = new LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        params.setMargins(5, 5, 5, 5);
+        singleLayout.setLayoutParams(params);
+        singleLayout.setGravity(Gravity.CENTER);
+        singleLayout.setBackgroundResource(R.color.likeLayoutColor);
 
         String imageURL = cocktail.getImageURL();
         generateImageViewCocktail(imageURL, singleLayout);
@@ -91,7 +120,8 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         String name = cocktail.getName();
         generateNameViewCocktail(name, singleLayout);
 
-        generateDeleteButtonViewCocktail(singleLayout);
+        int id = cocktail.getId();
+        generateDeleteButtonViewCocktail(id, singleLayout);
 
         bigLinear.addView(singleLayout);
 
@@ -104,46 +134,96 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
         ImageView image = new ImageView(LikesActivity.this);
 
         try {
-            image.setImageResource(R.drawable.cocktailfailed);
             layout.addView(image);
-            image.getLayoutParams().height=100;
-           // Glide.with(getBaseContext()).load(url).into(image);
+            image.getLayoutParams().height=300;
+            if (url.equals(""))
+                image.setImageResource(R.drawable.cocktailfailed);
+            else
+                Glide.with(getBaseContext()).load(url).into(image);
         } catch (NullPointerException e) {
             throw new RuntimeException(e);
         }
-
     }
 
+    /**
+     * Genère un Textview affichant le nom du cocktail
+     * @param name le nom à afficher
+     * @param layout dans lequel afficher le textView
+     */
     private void generateNameViewCocktail(String name, LinearLayout layout){
         TextView t = new TextView(getApplicationContext());
+
+        LayoutParams params = new LayoutParams(MATCH_PARENT, MATCH_PARENT, 1f);
+        t.setLayoutParams(params);
+
         t.setText(name);
+        t.setTextSize(24);
+        t.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        t.setGravity(Gravity.CENTER);
+        t.setTextColor(Color.parseColor("#000000"));
+
         layout.addView(t);
     }
-    private void generateDeleteButtonViewCocktail(LinearLayout layout){
-        Button bouton = new Button(getApplicationContext());
-        bouton.setText("supprimer");
 
-        bouton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+    /**
+     * Genère un bouton qui supprime le cocktail des likes
+     * @param idCocktail L'id du cocktail à supprimer
+     * @param layout dans lequel afficher le boutton
+     */
+    private void generateDeleteButtonViewCocktail(int idCocktail, LinearLayout layout){
+        ImageButton deleteButton = new ImageButton(getApplicationContext());
+        deleteButton.setImageResource(R.drawable.baseline_delete_48);
+        deleteButton.setBackgroundResource(R.color.likeLayoutColor);
 
-                bigLinear.removeView(layout);
-            }
+        deleteButton.setOnClickListener(v -> {
+            bigLinear.removeView(layout);
+            db.deleteLike(idCocktail, userID);
         });
 
-        layout.addView(bouton);
+        layout.addView(deleteButton);
     }
 
-public View.OnClickListener deleteCocktail(){
-
-    return null;
-}
 
     protected void onDestroy() {
         super.onDestroy();
         db.close();
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.top_app_bar, menu);
+        return true;
+    }
 
+    /**
+     * @param item
+     * onOptionItemSelected permet de gérer les clis sur les différent item du menu top_app_bar
+     * (toolbar principale de l'application)
+     * l'unique item nous ammène au search activity
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        else {
+            if (item.getItemId() == R.id.buttontoolbar) {
+                i = new Intent(LikesActivity.this, SearchActivity.class);
+                startActivity(i);
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * @param item The selected item
+     * onNavigationItemSelected permet de gérer les clis sur les différent item du menu navigation_menu
+     * (drawer disponible sur le coté gauche de l'appplication)
+     * Chaque item nous emmène sur une autre activity
+     */
+    @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(MenuItem item) {
 
         // 4 - Handle Navigation Item Click
@@ -167,16 +247,28 @@ public View.OnClickListener deleteCocktail(){
                 i = new Intent(LikesActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
+            case R.id.logout:
+                i = new Intent(LikesActivity.this, MainActivity.class);
+                startActivity(i);
+                onStop();
+                Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }
-
         DrawerLayout drawer = findViewById(R.id.like_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
-
+    /**
+     * Deconnecte l'utilisateur à la fermeture
+     */
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
+    }
 }
 

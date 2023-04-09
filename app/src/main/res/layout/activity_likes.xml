@@ -8,6 +8,9 @@
     android:layout_height="match_parent"
     tools:context=".Activity.LikesActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,8 +31,9 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-
     </LinearLayout>
+
+    </ScrollView>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/activity_main_nav_view"

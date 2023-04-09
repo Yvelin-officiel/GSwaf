@@ -1,9 +1,9 @@
 package com.example.gswaf.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -49,13 +50,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RandomCocktailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     public DrawerLayout drawerLayout;
     Animation scaleUp,scaleDown;
     public ActionBarDrawerToggle actionBarDrawerToggle;
-    private NavigationView navigationView;
 
     DBHandler db;
     SharedPreferences sp;
@@ -85,7 +86,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         actionBarDrawerToggle.syncState();
 
         // to make the Navigation drawer icon always appear on the action bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
@@ -121,6 +122,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
     }
 
 
+    @SuppressLint("StaticFieldLeak")
     private class RequestTask extends AsyncTask<Void, Void, Cocktail> {
         /**
          * Lance la tâche asynchrone
@@ -130,7 +132,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         protected Cocktail doInBackground(Void... voids) {
             Cocktail response = new Cocktail();
             try {
-                HttpURLConnection connection = null;
+                HttpURLConnection connection;
                 URL url = new URL("https://www.thecocktaildb.com/api/json/v1/1/random.php");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -166,7 +168,6 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
          *
          * @param jso L'objet JSON
          * @return ArrayList<Cocktail>
-         * @throws Exception
          */
         private Cocktail decodeJSON(JSONObject jso) throws Exception {
             List<String> measure = new ArrayList<>();
@@ -223,14 +224,14 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
          * Méthode qui va être appelée à la fin de la requête asynchrone.
          * Génère les TextView et EditText sur la bas edes données reçues
          *
-         * @param result
          */
+        @SuppressLint("SetTextI18n")
         protected void onPostExecute(Cocktail result) {
             LinearLayout layout = findViewById(R.id.layoutCocktail);
             try{
-                generateImageViewCocktail(result.getImageURL(), layout);
-                generateTextViewRecipe(result, layout);
-                generateNameViewCoktail(result, layout);
+                generateImageViewCocktail(result.getImageURL());
+                generateTextViewRecipe(result);
+                generateNameViewCoktail(result);
             }  catch (java.lang.NullPointerException e) {
                 TextView t;
                 t = new TextView(getApplicationContext());
@@ -248,19 +249,19 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
          *
          * @param url L'url de l'image a affiché
          */
-        private void generateImageViewCocktail(String url, LinearLayout layout) {
+        private void generateImageViewCocktail(String url) {
             ImageView image = findViewById(R.id.image);
             Glide.with(getBaseContext()).load(url).into(image);
         }
 
         // genère le textView sous l'image
-        private void generateTextViewRecipe(Cocktail cocktail, LinearLayout layout) {
+        private void generateTextViewRecipe(Cocktail cocktail) {
             TextView t = findViewById(R.id.recipe);
 
             t.setText(cocktail.getRecipe());
         }
 
-        private void generateNameViewCoktail(Cocktail cocktail, LinearLayout layout){
+        private void generateNameViewCoktail(Cocktail cocktail){
             TextView t = findViewById(R.id.CocktailName);
             t.setText(
                     cocktail.getName()
@@ -273,6 +274,34 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         db.close();
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.top_app_bar, menu);
+        return true;
+    }
+
+    /**
+     * @param item
+     * onOptionItemSelected permet de gérer les clis sur les différent item du menu top_app_bar
+     * (toolbar principale de l'application)
+     * l'unique item nous ammène au search activity
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        else {
+            if (item.getItemId() == R.id.buttontoolbar) {
+                i = new Intent(RandomCocktailActivity.this, SearchActivity.class);
+                startActivity(i);
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(MenuItem item) {
 
         // 4 - Handle Navigation Item Click
@@ -296,6 +325,12 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                 i = new Intent(RandomCocktailActivity.this, SearchActivity.class);
                 startActivity(i);
                 break;
+            case R.id.logout:
+                i = new Intent(RandomCocktailActivity.this, MainActivity.class);
+                startActivity(i);
+                onStop();
+                Toast.makeText(this, "Déconnecté", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }
@@ -304,6 +339,16 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    /**
+     * Deconnecte l'utilisateur à la fermeture
+     */
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
     }
 
 }
