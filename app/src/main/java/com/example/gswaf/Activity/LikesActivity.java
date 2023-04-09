@@ -176,14 +176,13 @@ public class LikesActivity extends AppCompatActivity implements NavigationView.O
 
         deleteButton.setOnClickListener(v -> {
             bigLinear.removeView(layout);
-            db.deleteLike(idCocktail, userID);
+            boolean success = db.deleteLike(idCocktail, userID);
+            if (success)
+                Toast.makeText(this, "Le cocktail à bien été supprimé", Toast.LENGTH_SHORT).show();
         });
 
         layout.addView(deleteButton);
     }
-
-
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

@@ -53,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
                 userID = db.selectUserIdByUsername(username);   // Renvoit l'id de l'utilisateur correspondent ou -1 si rien trouvé
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putInt("userID", userID);
-                System.out.println("User login : "+ userID);
                 editor.apply();
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(i);

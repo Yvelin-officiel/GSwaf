@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -63,8 +64,7 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
     int userID;
 
     Cocktail cocktail;
-
-
+    int nbCocktailLike;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,30 +94,55 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
 
 
         sp = getApplicationContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        userID = sp.getInt("username", -1);
+        userID = sp.getInt("userID", -1);
+        nbCocktailLike = sp.getInt("nbCocktailLike", 0);
 
         db = new DBHandler(this);
         RequestTask rt = new RequestTask();
         rt.execute();
     }
 
+    /**
+     * Relance l'activité pour générer un nouveau cocktail,
+     * l'ajoute à la DB si bouton like cliqué
+     * @param v récupère le boutton appuyé
+     */
     public void clic(View v) {
+
         Intent i;
-        if (v.getId() == R.id.unlike) {
-            i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
-            startActivity(i);
-        }
-        else if (v.getId() == R.id.like) {
+        switch (v.getId()) {
+            case R.id.unlike:
+                i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
+                startActivity(i);
+                break;
+            case R.id.like:
+                if (userID == -1)
+                    Toast.makeText(this, "Veuillez vous connectez pour avoir accès aux likes !", Toast.LENGTH_SHORT).show();
+                else {
+                    int idCocktail = cocktail.getId();
+                    String name = cocktail.getName();
+                    String imageURL = cocktail.getImageURL();
+                    db.insertLike(idCocktail, name, imageURL, userID);
 
-            // Ajoute le cocktail généré actuellement à la liste des likes de l'utilisateur
-            int idCocktail = cocktail.getId();
-            String name = cocktail.getName();
-            String imageURL = cocktail.getImageURL();
-            db.insertLike(idCocktail, name, imageURL, userID);
+                    nbCocktailLike++;
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt("nbCocktailLike", nbCocktailLike);
+                    editor.apply();
 
-            Toast.makeText(this, "Cocktail ajouter aux likes ", Toast.LENGTH_SHORT).show();
-            i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
-            startActivity(i);
+                    System.out.println(nbCocktailLike);
+                    if (nbCocktailLike >= 4) {
+                        nbCocktailLike = 0;
+                        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                        final long[] pattern = {1000, 1000};
+                        vibrator.vibrate(pattern, -1);
+                        Toast.makeText(this, "Il serait temps de les boires aussi !", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(this, "Cocktail ajouté aux likes ", Toast.LENGTH_SHORT).show();
+
+                    i = new Intent(RandomCocktailActivity.this, RandomCocktailActivity.class);
+                    startActivity(i);
+                }
+                break;
         }
     }
 
@@ -164,18 +189,15 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
 
         /**
          * Méthode qui décode l'objet JSON
-         * Extrait les attributs du cocktail et les ajoute à l'arrayList
-         *
+         * Extrait les attributs du cocktail et les ajoutes au cocktail renvoyé
          * @param jso L'objet JSON
-         * @return ArrayList<Cocktail>
+         * @return Cocktail
          */
         private Cocktail decodeJSON(JSONObject jso) throws Exception {
             List<String> measure = new ArrayList<>();
             List<String> ingredients = new ArrayList<>();
-            System.out.println("Try decode");
 
             try {
-                System.out.println("Try decode 2");
                 JSONArray jsoCocktail = jso.getJSONArray("drinks");
                 for (int i = 0; i < jsoCocktail.length(); i++) {
                     Spanned id, name, instruction, imageURL, ingreds, measu;
@@ -210,7 +232,6 @@ public class RandomCocktailActivity extends AppCompatActivity implements Navigat
                             }
                         }
                     }
-
                     cocktail = new Cocktail(Integer.parseInt(id.toString()), name.toString(), instruction.toString(), urlDecoder, ingredients, measure);
                 }
             } catch (Exception e) {

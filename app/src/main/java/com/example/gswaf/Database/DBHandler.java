@@ -175,7 +175,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return responses;
     }
 
-
+    /**
+     * Cherche l'id de l'utilisateur rentré en paramètre
+     * @param username
+     * @return l'id
+     */
     public int selectUserIdByUsername(String username){
         SQLiteDatabase db = this.getReadableDatabase();
         int userId = -1;
